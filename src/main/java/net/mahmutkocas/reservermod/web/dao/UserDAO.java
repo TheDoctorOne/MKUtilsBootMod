@@ -3,6 +3,8 @@ package net.mahmutkocas.reservermod.web.dao;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Table(schema = "USER")
 @Entity
@@ -27,4 +29,14 @@ public class UserDAO {
 
     @Column(name = "MAIL")
     private String mail;
+
+    @Column(name = "TOKEN")
+    private String token;
+
+    @Column(name = "TOKEN_EXP_DATE")
+    private LocalDateTime tokenExpDate;
+
+    @OneToMany
+    private List<UserCrateDAO> crates;
+
 }

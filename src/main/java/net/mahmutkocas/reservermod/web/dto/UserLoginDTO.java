@@ -7,8 +7,7 @@ import lombok.*;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO {
+public class UserLoginDTO {
     private String username;
     private String password;
-    private String mail;
 }

@@ -1,12 +1,17 @@
 package net.mahmutkocas.reservermod.web.dao;
 
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Table(schema = "USER_CRATE")
 @Entity
 @Data
+@Builder
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserCrateDAO {
 
     @Id
@@ -14,4 +19,12 @@ public class UserCrateDAO {
     @Column(name = "ID",updatable = false, nullable = false)
     private Long id;
 
+    @Column(name = "CLAIMED")
+    private boolean claimed;
+
+    @ManyToOne
+    private CrateDAO crateDAO;
+
+    @ManyToOne
+    private UserDAO userDAO;
 }

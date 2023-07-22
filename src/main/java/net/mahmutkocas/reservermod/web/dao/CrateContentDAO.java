@@ -1,8 +1,18 @@
 package net.mahmutkocas.reservermod.web.dao;
 
+import lombok.*;
+
 import javax.persistence.*;
+import java.util.Set;
 
 @Table(schema = "CRATE_CONTENT")
+@Entity
+@Data
+@Builder
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class CrateContentDAO {
 
     @Id
@@ -15,4 +25,7 @@ public class CrateContentDAO {
 
     @Column(name = "CHANCE")
     private int chance;
+
+    @ManyToMany(mappedBy = "crateContents")
+    private Set<CrateDAO> crates;
 }

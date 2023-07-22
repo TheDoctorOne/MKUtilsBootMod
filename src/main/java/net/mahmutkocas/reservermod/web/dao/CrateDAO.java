@@ -1,13 +1,18 @@
 package net.mahmutkocas.reservermod.web.dao;
 
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Set;
 
 @Table(schema = "CRATE")
 @Entity
 @Data
+@Builder
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class CrateDAO {
 
     @Id
@@ -18,7 +23,12 @@ public class CrateDAO {
     @Column(name = "NAME")
     private String name;
 
-    @Column(name = "CONTENT")
-    private List<CrateContentDAO> crateContents;
+    @ManyToMany
+    @JoinTable(
+            name = "",
+            joinColumns = @JoinColumn(name = "crate_id"),
+            inverseJoinColumns = @JoinColumn(name = "content_id")
+    )
+    private Set<CrateContentDAO> crateContents;
 
 }
