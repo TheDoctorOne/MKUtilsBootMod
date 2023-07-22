@@ -17,7 +17,7 @@ public class UserDAO {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name = "ID",updatable = false, nullable = false)
-    private int id;
+    private Long id;
 
     @Column(name = "USERNAME")
     private String username;

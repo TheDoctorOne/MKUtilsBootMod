@@ -5,6 +5,7 @@ import net.mahmutkocas.reservermod.web.dto.UserDTO;
 import net.mahmutkocas.reservermod.web.repository.UserRepository;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,7 +18,7 @@ public class UserController {
     private UserRepository repository;
 
 
-    @RequestMapping("/register")
+    @PostMapping("/register")
     public void register(@RequestBody UserDTO userDTO) {
         repository.save(UserDAO.builder()
                         .username(userDTO.getUsername())

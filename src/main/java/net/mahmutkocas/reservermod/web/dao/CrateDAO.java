@@ -13,7 +13,7 @@ public class CrateDAO {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name = "ID",updatable = false, nullable = false)
-    private int id;
+    private Long id;
 
     @Column(name = "NAME")
     private String name;
