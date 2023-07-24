@@ -3,6 +3,7 @@ package net.mahmutkocas.reservermod.client.screen;
 import feign.FeignException;
 import lombok.extern.log4j.Log4j2;
 import net.mahmutkocas.reservermod.client.ClientGlobals;
+import net.mahmutkocas.reservermod.client.enums.AuthState;
 import net.mahmutkocas.reservermod.client.screen.components.PassField;
 import net.mahmutkocas.reservermod.common.dto.TokenDTO;
 import net.mahmutkocas.reservermod.common.dto.UserLoginDTO;
@@ -22,7 +23,7 @@ public class LoginScreen extends GuiScreen {
     private GuiTextField userField;
     private PassField passField;
 
-    private LoginState loginState;
+    private AuthState authState = AuthState.NONE;
 
     public LoginScreen(GuiScreen parent) {
         this.parent = parent;
@@ -56,21 +57,21 @@ public class LoginScreen extends GuiScreen {
             login();
         } catch (FeignException.FeignClientException.Unauthorized unauthorized){
             log.error("Server unauthorized!", unauthorized);
-            loginState = LoginState.FAIL;
+            authState = AuthState.FAIL;
         } catch (RuntimeException rte) {
             log.error("Server connection exception!", rte);
-            loginState = LoginState.SERVER_ERROR;
+            authState = AuthState.SERVER_ERROR;
         }
     }
 
     private void login() {
-        ResponseEntity<TokenDTO> response = ClientGlobals.getUserClient().login(new UserLoginDTO(userField.getText(), passField.getText()));
-        if(!response.getStatusCode().is2xxSuccessful()) {
-            loginState = LoginState.SUCCESS;
-            ClientGlobals.setUserToken(response.getBody());
-        } else {
-            loginState = LoginState.FAIL;
+        TokenDTO response = ClientGlobals.getUserClient().login(new UserLoginDTO(userField.getText(), passField.getText()));
+        if(response == null) {
+            authState = AuthState.FAIL;
+            return;
         }
+        authState = AuthState.SUCCESS;
+        ClientGlobals.setUserToken(response);
     }
 
 
@@ -95,22 +96,9 @@ public class LoginScreen extends GuiScreen {
         this.drawCenteredString(this.fontRenderer, "Giris Yap", this.width / 2, 17, 16777215);
         this.drawString(this.fontRenderer, "Kullanıcı Adı", this.width / 2 - 100, 53, 10526880);
         this.drawString(this.fontRenderer, "Parola", this.width / 2 - 100, 94, 10526880);
+        this.drawString(this.fontRenderer, authState.getInfo(), this.width / 2 - 100, this.height / 4 + 120 + 18 + 25, authState.getColorInt());
         userField.drawTextBox();
         passField.drawTextBox();
         super.drawScreen(mouseX, mouseY, partialTicks);
-    }
-
-    private enum LoginState {
-        NONE(""),
-        FAIL("Başarısız"),
-        SERVER_ERROR("Sunucuya Bağlanılamıyor"),
-        SUCCESS("Başarılı!");
-        private final String info;
-        LoginState(String info) {
-            this.info = info;
-        }
-        public String getInfo() {
-            return info;
-        }
     }
 }

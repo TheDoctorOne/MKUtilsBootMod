@@ -1,5 +1,6 @@
 package net.mahmutkocas.reservermod.server;
 
+import net.mahmutkocas.reservermod.server.events.ServerUserEvents;
 import org.springframework.context.ConfigurableApplicationContext;
 
 public class ServerGlobals {

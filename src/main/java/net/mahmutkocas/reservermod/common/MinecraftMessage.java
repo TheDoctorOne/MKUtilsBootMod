@@ -20,6 +20,10 @@ public class MinecraftMessage implements IMessage {
         msg = null;
     }
 
+    public MinecraftMessage(String msg) {
+        this.msg = msg;
+    }
+
     @SneakyThrows
     public MinecraftMessage(Object msg) {
         this.msg = mapper.writeValueAsString(msg);

@@ -37,7 +37,13 @@ public class UserService {
 
         try {
             Optional<UserDAO> userOpt = repository.findById(Long.parseLong(userId));
-            return userOpt.filter(userDAO -> token.equals(userDAO.getToken())).isPresent();
+            if(!userOpt.isPresent()) {
+                return false;
+            }
+            if(userOpt.get().getTokenExpDate().isBefore(LocalDateTime.now())) {
+                return false;
+            }
+            return userOpt.get().getToken().equals(token);
         } catch (Exception e) {
             log.error("Token exception", e);
         }
@@ -45,9 +51,13 @@ public class UserService {
     }
 
     public TokenDTO login(UserDAO req) {
+        if(req.getUsername().isEmpty() || req.getPassword().isEmpty() || req.getUsername().contains(";")) {
+            return null;
+        }
+
         Optional<UserDAO> oUserDAO = repository.findByUsername(req.getUsername());
         if(!oUserDAO.isPresent()) {
-            return null;
+            oUserDAO = Optional.of(repository.save(req));
         }
 
         UserDAO userDAO = oUserDAO.get();
@@ -63,6 +73,10 @@ public class UserService {
     }
 
     public boolean register(UserDAO req) {
+        if(req.getUsername().isEmpty() || req.getPassword().isEmpty() || req.getUsername().contains(";")) {
+            return false;
+        }
+
         Optional<UserDAO> oUserDAO = repository.findByUsername(req.getUsername());
         if(oUserDAO.isPresent()) {
             return false;

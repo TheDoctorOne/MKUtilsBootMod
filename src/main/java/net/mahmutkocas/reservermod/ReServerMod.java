@@ -8,6 +8,8 @@ import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import org.apache.logging.log4j.Logger;
 
 @Mod(modid = ReServerMod.MODID, name = ReServerMod.NAME, version = ReServerMod.VERSION)
@@ -23,6 +25,7 @@ public class ReServerMod
     private void serverStarting(FMLServerStartingEvent event) {
         if(event.getServer().isDedicatedServer()) {
             ServerGlobals.setWEB(WebApplication.start(event.getServer()));
+
             logger.info("Web App Run!");
         }
     }
@@ -43,5 +46,10 @@ public class ReServerMod
     public void init(FMLInitializationEvent event)
     {
         EventHandle.register();
+    }
+
+    @EventHandler
+    public void serverStop(FMLServerStoppingEvent event) {
+        ServerGlobals.WEB.stop();
     }
 }
