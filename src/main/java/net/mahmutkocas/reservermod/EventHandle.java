@@ -1,6 +1,6 @@
 package net.mahmutkocas.reservermod;
 
-import net.mahmutkocas.reservermod.screen.ScreenHandler;
+import net.mahmutkocas.reservermod.client.screen.ScreenHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
 

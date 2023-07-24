@@ -1,6 +1,7 @@
 package net.mahmutkocas.reservermod;
 
-import net.mahmutkocas.reservermod.web.WebApplication;
+import net.mahmutkocas.reservermod.client.ClientGlobals;
+import net.mahmutkocas.reservermod.server.web.WebApplication;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -32,7 +33,7 @@ public class ReServerMod
 
         AppGlobals.SIDE = event.getSide();
         if(AppGlobals.SIDE.isClient()) {
-            AppGlobals.runUserClient();
+            ClientGlobals.runUserClient();
             logger.info("User client started!");
         }
     }
