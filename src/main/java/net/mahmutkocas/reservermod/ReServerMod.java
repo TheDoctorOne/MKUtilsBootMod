@@ -1,6 +1,7 @@
 package net.mahmutkocas.reservermod;
 
 import net.mahmutkocas.reservermod.client.ClientGlobals;
+import net.mahmutkocas.reservermod.server.ServerGlobals;
 import net.mahmutkocas.reservermod.server.web.WebApplication;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -21,7 +22,7 @@ public class ReServerMod
     @EventHandler
     private void serverStarting(FMLServerStartingEvent event) {
         if(event.getServer().isDedicatedServer()) {
-            AppGlobals.setWEB(WebApplication.start(event.getServer()));
+            ServerGlobals.setWEB(WebApplication.start(event.getServer()));
             logger.info("Web App Run!");
         }
     }

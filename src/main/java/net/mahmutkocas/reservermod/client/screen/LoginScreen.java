@@ -2,7 +2,6 @@ package net.mahmutkocas.reservermod.client.screen;
 
 import feign.FeignException;
 import lombok.extern.log4j.Log4j2;
-import net.mahmutkocas.reservermod.AppGlobals;
 import net.mahmutkocas.reservermod.client.ClientGlobals;
 import net.mahmutkocas.reservermod.client.screen.components.PassField;
 import net.mahmutkocas.reservermod.common.dto.TokenDTO;
