@@ -33,17 +33,15 @@ public class UserService {
         }
 
         String userId = splt[0];
-        String token = splt[1];
 
         try {
             Optional<UserDAO> userOpt = repository.findById(Long.parseLong(userId));
             if(!userOpt.isPresent()) {
                 return null;
             }
-            if(userOpt.get().getTokenExpDate().isBefore(LocalDateTime.now())) {
-                return null;
+            if(userOpt.get().getTokenExpDate().isAfter(LocalDateTime.now())) {
+                return userOpt.get().getToken().equals(tokenRaw) ? userOpt.get().getUsername() : null;
             }
-            return userOpt.get().getToken().equals(token) ? userOpt.get().getUsername() : null;
         } catch (Exception e) {
             log.error("Token exception", e);
         }

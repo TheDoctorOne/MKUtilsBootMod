@@ -19,7 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @SideOnly(Side.SERVER)
 public class ServerUserEvents {
 
-    private static final Integer TIMEOUT_TICK = 8;
+    private static final Integer TIMEOUT_TICK = 40;
     private final Map<EntityPlayerMP, Integer> userQueue = new ConcurrentHashMap<>();
 
     public static final ServerUserEvents INSTANCE = new ServerUserEvents();
@@ -36,11 +36,16 @@ public class ServerUserEvents {
 
         List<EntityPlayerMP> toRemove = new ArrayList<>();
         for(EntityPlayerMP user : userQueue.keySet()) {
+            if(user.hasDisconnected()) {
+                toRemove.add(user);
+                continue;
+            }
+
             Integer tickCount = userQueue.get(user);
             if(tickCount > TIMEOUT_TICK) {
                 user.connection.disconnect(new TextComponentString("Giriş Yapınız!"));
+                toRemove.add(user);
             }
-            toRemove.add(user);
         }
 
         for (EntityPlayerMP user : toRemove) {
