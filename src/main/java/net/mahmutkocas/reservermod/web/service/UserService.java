@@ -1,5 +1,8 @@
 package net.mahmutkocas.reservermod.web.service;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import net.mahmutkocas.reservermod.web.dao.UserDAO;
 import net.mahmutkocas.reservermod.web.dto.TokenDTO;
 import net.mahmutkocas.reservermod.web.repository.UserRepository;
@@ -13,11 +16,35 @@ import java.util.UUID;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
+@Log4j2
 public class UserService {
 
-    @Autowired
-    private UserRepository repository;
+    private final UserRepository repository;
 
+    public boolean isTokenValid(TokenDTO tokenDTO) {
+        if(tokenDTO == null || tokenDTO.getToken() == null) {
+            return false;
+        }
+
+        String tokenRaw = tokenDTO.getToken();
+        String[] splt = tokenRaw.split(";");
+
+        if(splt.length != 2) {
+            return false;
+        }
+
+        String userId = splt[0];
+        String token = splt[1];
+
+        try {
+            Optional<UserDAO> userOpt = repository.findById(Long.parseLong(userId));
+            return userOpt.filter(userDAO -> token.equals(userDAO.getToken())).isPresent();
+        } catch (Exception e) {
+            log.error("Token exception", e);
+        }
+        return false;
+    }
 
     public TokenDTO login(UserDAO req) {
         Optional<UserDAO> oUserDAO = repository.findByUsername(req.getUsername());
@@ -30,7 +57,7 @@ public class UserService {
             return null;
         }
 
-        userDAO.setToken(UUID.randomUUID().toString());
+        userDAO.setToken(userDAO.getId() + ";" + UUID.randomUUID());
         userDAO.setTokenExpDate(LocalDateTime.now().plusHours(1));
         repository.save(userDAO);
 

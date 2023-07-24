@@ -6,8 +6,8 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Table(schema = "USER")
 @Entity
+@Table(name = "USER_TABLE")
 @Data
 @Builder
 @Setter

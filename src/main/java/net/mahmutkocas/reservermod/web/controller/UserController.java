@@ -1,5 +1,6 @@
 package net.mahmutkocas.reservermod.web.controller;
 
+import lombok.RequiredArgsConstructor;
 import net.mahmutkocas.reservermod.web.dao.UserDAO;
 import net.mahmutkocas.reservermod.web.dto.TokenDTO;
 import net.mahmutkocas.reservermod.web.dto.UserDTO;
@@ -18,25 +19,25 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/user")
+@RequiredArgsConstructor
 public class UserController {
 
-    @Autowired
-    private UserService service;
+    private final UserService service;
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody UserDTO userDTO) {
         boolean success = service.register(UserMapper.toDAO(userDTO));
         return success ?
-                new ResponseEntity<String>("Register successful!", HttpStatus.ACCEPTED)
+                new ResponseEntity<>("Register successful!", HttpStatus.ACCEPTED)
                 :
-                new ResponseEntity<String>("Register failed!", HttpStatus.UNAUTHORIZED);
+                new ResponseEntity<>("User exists!", HttpStatus.UNAUTHORIZED);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody UserLoginDTO userDTO) {
+    public ResponseEntity<TokenDTO> login(@RequestBody UserLoginDTO userDTO) {
         TokenDTO tokenDTO = service.login(UserMapper.toDAO(userDTO));
         if(tokenDTO == null) {
-            return new ResponseEntity<String>("Login failed!", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(new TokenDTO("Login failed!"), HttpStatus.UNAUTHORIZED);
         }
         return ResponseEntity.ok(tokenDTO);
     }

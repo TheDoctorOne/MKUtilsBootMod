@@ -17,24 +17,29 @@ public class ReServerMod
 
     private static Logger logger;
 
-
     @EventHandler
     private void serverStarting(FMLServerStartingEvent event) {
         if(event.getServer().isDedicatedServer()) {
-            WebApplication.WebApp();
+            AppGlobals.setWEB(WebApplication.start(event.getServer()));
             logger.info("Web App Run!");
         }
     }
-
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
         logger = event.getModLog();
+
+        AppGlobals.SIDE = event.getSide();
+        if(AppGlobals.SIDE.isClient()) {
+            AppGlobals.runUserClient();
+            logger.info("User client started!");
+        }
     }
 
     @EventHandler
     public void init(FMLInitializationEvent event)
     {
+        EventHandle.register();
     }
 }

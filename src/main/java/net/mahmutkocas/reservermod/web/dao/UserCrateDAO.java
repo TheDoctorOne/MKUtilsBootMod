@@ -4,8 +4,8 @@ import lombok.*;
 
 import javax.persistence.*;
 
-@Table(schema = "USER_CRATE")
 @Entity
+@Table(name = "USER_CRATE")
 @Data
 @Builder
 @Setter
