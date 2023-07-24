@@ -1,5 +1,7 @@
 package net.mahmutkocas.reservermod.server.events;
 
+import net.mahmutkocas.reservermod.AppGlobals;
+import net.mahmutkocas.reservermod.common.MinecraftMessage;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.text.TextComponentString;
@@ -17,7 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @SideOnly(Side.SERVER)
 public class ServerUserEvents {
 
-    private static final Integer TIMEOUT_TICK = 5;
+    private static final Integer TIMEOUT_TICK = 8;
     private final Map<EntityPlayerMP, Integer> userQueue = new ConcurrentHashMap<>();
 
     public static final ServerUserEvents INSTANCE = new ServerUserEvents();
@@ -61,6 +63,7 @@ public class ServerUserEvents {
     public void onPlayerJoin(EntityJoinWorldEvent event) {
         if(event.getEntity() instanceof EntityPlayerMP) {
             userQueue.put((EntityPlayerMP) event.getEntity(), 0);
+            AppGlobals.NETWORK.sendTo(new MinecraftMessage("token"), (EntityPlayerMP) event.getEntity());
         }
     }
 }

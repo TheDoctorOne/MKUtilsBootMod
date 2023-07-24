@@ -20,16 +20,16 @@ public class UserService {
 
     private final UserRepository repository;
 
-    public boolean isTokenValid(TokenDTO tokenDTO) {
+    public String getUserByToken(TokenDTO tokenDTO) {
         if(tokenDTO == null || tokenDTO.getToken() == null) {
-            return false;
+            return null;
         }
 
         String tokenRaw = tokenDTO.getToken();
         String[] splt = tokenRaw.split(";");
 
         if(splt.length != 2) {
-            return false;
+            return null;
         }
 
         String userId = splt[0];
@@ -38,16 +38,16 @@ public class UserService {
         try {
             Optional<UserDAO> userOpt = repository.findById(Long.parseLong(userId));
             if(!userOpt.isPresent()) {
-                return false;
+                return null;
             }
             if(userOpt.get().getTokenExpDate().isBefore(LocalDateTime.now())) {
-                return false;
+                return null;
             }
-            return userOpt.get().getToken().equals(token);
+            return userOpt.get().getToken().equals(token) ? userOpt.get().getUsername() : null;
         } catch (Exception e) {
             log.error("Token exception", e);
         }
-        return false;
+        return null;
     }
 
     public TokenDTO login(UserDAO req) {

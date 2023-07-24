@@ -10,5 +10,6 @@ public class ClientUserEvents {
 
     @SubscribeEvent
     public void onServerConnection(FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
+
     }
 }
