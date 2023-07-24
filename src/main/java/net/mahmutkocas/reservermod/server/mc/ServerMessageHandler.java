@@ -14,6 +14,8 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.Locale;
+
 @SideOnly(Side.SERVER)
 @Log4j2
 public class ServerMessageHandler implements IMessageHandler<MinecraftMessage, IMessage> {
@@ -23,7 +25,8 @@ public class ServerMessageHandler implements IMessageHandler<MinecraftMessage, I
             ModTokenDTO dto = message.getMsg(ModTokenDTO.class);
             String token = dto.getToken();
             String username = ServerGlobals.USER_SERVICE.getUserByToken(new TokenDTO(token));
-            if(username == null) {
+
+            if(username == null || !username.equals(ctx.getServerHandler().player.getName().toLowerCase(Locale.ENGLISH))) {
                 if(ctx.getServerHandler().player.hasDisconnected()) {
                    return null;
                 }

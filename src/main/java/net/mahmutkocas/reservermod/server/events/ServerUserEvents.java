@@ -5,14 +5,19 @@ import net.mahmutkocas.reservermod.common.MinecraftMessage;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraftforge.event.CommandEvent;
+import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -45,7 +50,9 @@ public class ServerUserEvents {
             if(tickCount > TIMEOUT_TICK) {
                 user.connection.disconnect(new TextComponentString("Giriş Yapınız!"));
                 toRemove.add(user);
+                continue;
             }
+            userQueue.put(user, tickCount+1);
         }
 
         for (EntityPlayerMP user : toRemove) {
@@ -56,10 +63,13 @@ public class ServerUserEvents {
     public void userConfirmed(String username) {
         EntityPlayerMP target = null;
         for(EntityPlayerMP user : userQueue.keySet()) {
-            if(user.getName().equals(username)) {
+            if(user.getName().toLowerCase(Locale.ENGLISH).equals(username)) {
                 target = user;
                 break;
             }
+        }
+        if(target == null) {
+            return;
         }
         userQueue.remove(target);
     }
@@ -71,4 +81,28 @@ public class ServerUserEvents {
             AppGlobals.NETWORK.sendTo(new MinecraftMessage("token"), (EntityPlayerMP) event.getEntity());
         }
     }
+
+    @SubscribeEvent
+    public void onCommandRequest(CommandEvent event) {
+        if(userQueue.containsKey(event.getSender())) {
+            event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    public void onKeyEvent(EntityEvent event) {
+        if(!(event.getEntity() instanceof EntityPlayerMP)) {
+            return;
+        }
+        if(!userQueue.containsKey(event.getEntity())) {
+            return;
+        }
+        if(event.isCancelable()) {
+            event.setCanceled(true);
+        }
+        if(event.hasResult()) {
+            event.setResult(Event.Result.DENY);
+        }
+    }
+
 }

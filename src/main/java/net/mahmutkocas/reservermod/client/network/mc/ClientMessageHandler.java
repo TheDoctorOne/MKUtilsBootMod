@@ -1,9 +1,11 @@
 package net.mahmutkocas.reservermod.client.network.mc;
 
 import lombok.SneakyThrows;
+import net.mahmutkocas.reservermod.AppGlobals;
 import net.mahmutkocas.reservermod.client.ClientGlobals;
 import net.mahmutkocas.reservermod.common.MinecraftMessage;
 import net.mahmutkocas.reservermod.common.dto.ModTokenDTO;
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -34,7 +36,9 @@ public class ClientMessageHandler implements IMessageHandler<MinecraftMessage, I
                     Arrays.stream(fMods).map(File::getName).collect(Collectors.toList())
                     :
                     new ArrayList<>();
-            return new MinecraftMessage(new ModTokenDTO(ClientGlobals.getUserToken().getToken(), mods));
+            MinecraftMessage msg = new MinecraftMessage(new ModTokenDTO(ClientGlobals.getUserToken().getToken(), mods));
+            Minecraft.getMinecraft().addScheduledTask(() -> AppGlobals.NETWORK.sendToServer(msg));
+            return msg;
         }
         return null;
     }
