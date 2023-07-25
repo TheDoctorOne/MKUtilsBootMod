@@ -1,5 +1,6 @@
 package net.mahmutkocas.mkutils.client.screen;
 
+import net.mahmutkocas.mkutils.client.ClientGlobals;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiMultiplayer;
@@ -27,7 +28,7 @@ public class MultiplayerScreen extends GuiMultiplayer {
     protected void actionPerformed(GuiButton button) throws IOException {
         super.actionPerformed(button);
         if(button.id == 99) {
-            this.mc.displayGuiScreen(new LoginScreen(this));
+            this.mc.displayGuiScreen(new LoginScreen(this, ClientGlobals.getClientConfig().getUsername()));
         }
     }
 }

@@ -37,6 +37,7 @@ public class MKUtils
         AppGlobals.SIDE = event.getSide();
         if(AppGlobals.SIDE.isClient()) {
             ClientGlobals.runUserClient();
+            ClientGlobals.readConfig();
             logger.info("User client started!");
         }
     }

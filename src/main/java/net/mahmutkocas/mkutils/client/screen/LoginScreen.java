@@ -6,6 +6,7 @@ import net.mahmutkocas.mkutils.client.ClientGlobals;
 import net.mahmutkocas.mkutils.client.enums.AuthState;
 import net.mahmutkocas.mkutils.client.screen.components.PassField;
 import net.mahmutkocas.mkutils.common.dto.TokenDTO;
+import net.mahmutkocas.mkutils.common.dto.UserDTO;
 import net.mahmutkocas.mkutils.common.dto.UserLoginDTO;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -22,11 +23,14 @@ public class LoginScreen extends GuiScreen {
     private GuiTextField userField;
     private PassField passField;
 
+    private final String initialUserName;
+
     private AuthState authState = AuthState.NONE;
 
-    public LoginScreen(GuiScreen parent) {
+    public LoginScreen(GuiScreen parent, String username) {
         this.parent = parent;
         this.mc = parent.mc;
+        initialUserName = username;
     }
 
     @Override
@@ -35,9 +39,11 @@ public class LoginScreen extends GuiScreen {
         userField = new GuiTextField(0, this.fontRenderer, this.width / 2 - 100, 66, 200, 20);
         passField = new PassField(1, this.fontRenderer, this.width / 2 - 100, 106, 200, 20);
 
+        userField.setText(initialUserName);
+
         this.buttonList.clear();
         this.buttonList.add(new GuiButton(0, this.width / 2 - 100, this.height / 4 + 96 + 18, "Giris"));
-        this.buttonList.add(new GuiButton(1, this.width / 2 - 100, this.height / 4 + 120 + 18, "Vazgec"));
+        this.buttonList.add(new GuiButton(1, this.width / 2 - 100, this.height / 4 + 120 + 18, "Geri"));
     }
 
     @Override
@@ -64,6 +70,9 @@ public class LoginScreen extends GuiScreen {
     }
 
     private void login() {
+        ClientGlobals.getClientConfig().setUsername(userField.getText());
+        ClientGlobals.saveConfig();
+
         TokenDTO response = ClientGlobals.getUserClient().login(new UserLoginDTO(userField.getText(), passField.getText()));
         if(response == null) {
             authState = AuthState.FAIL;
