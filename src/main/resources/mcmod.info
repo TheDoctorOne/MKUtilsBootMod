@@ -1,6 +1,6 @@
 [
 {
-  "modid": "reservermod",
+  "modid": "mkutils",
   "name": "Mahmut Kocas Server Mod",
   "description": "Upgraded version of old server mod.",
   "version": "${version}",

@@ -19,7 +19,7 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 
 version = '0.0.1'
 group = 'net.mahmutkocas' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = 'reservermod'
+archivesBaseName = 'mkutils'
 
 
 configurations.all {
