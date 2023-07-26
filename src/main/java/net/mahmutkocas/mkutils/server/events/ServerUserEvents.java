@@ -5,21 +5,23 @@ import lombok.Getter;
 import lombok.Setter;
 import net.mahmutkocas.mkutils.AppGlobals;
 import net.mahmutkocas.mkutils.common.MinecraftMessage;
+import net.mahmutkocas.mkutils.server.mc.LoginBlockContainer;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.network.EnumConnectionState;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @SideOnly(Side.SERVER)
@@ -88,7 +90,8 @@ public class ServerUserEvents {
         if(target == null) {
             return;
         }
-        userQueue.remove(target);
+
+//        userQueue.remove(target);
     }
 
     @SubscribeEvent
@@ -109,10 +112,21 @@ public class ServerUserEvents {
 
     @SubscribeEvent
     public void onEntityEvent(EntityEvent event) {
-        if(!(event.getEntity() instanceof EntityPlayerMP)) {
+        cancelTossEvent(event, event.getEntity());
+    }
+
+    @SubscribeEvent
+    public void onItemTossEvent(ItemTossEvent event) {
+        if(event.getEntity() instanceof EntityItem) {
+            cancelTossEvent(event, ((EntityItem) event.getEntity()).getThrower());
+        }
+    }
+
+    private void cancelTossEvent(Event event, Entity entity) {
+        if(!(entity instanceof EntityPlayerMP)) {
             return;
         }
-        if(!userQueue.containsKey(event.getEntity())) {
+        if(!userQueue.containsKey(entity)) {
             return;
         }
         if(event.isCancelable()) {
@@ -123,4 +137,18 @@ public class ServerUserEvents {
         }
     }
 
+    private void cancelTossEvent(ItemTossEvent event, String entityName) {
+        Optional<EntityPlayerMP> playerOpt = userQueue.keySet().stream().filter(entityPlayerMP -> entityPlayerMP.getName().equals(entityName)).findFirst();
+        if(!playerOpt.isPresent()) {
+            return;
+        }
+        EntityPlayerMP player = playerOpt.get();
+
+        if(event.isCancelable()) {
+            event.setCanceled(true);
+        }
+        if(event.hasResult()) {
+            event.setResult(Event.Result.DENY);
+        }
+    }
 }

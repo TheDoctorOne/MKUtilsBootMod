@@ -1,5 +1,7 @@
 package net.mahmutkocas.mkutils.client.screen;
 
+import com.mojang.authlib.properties.Property;
+import com.mojang.authlib.properties.PropertyMap;
 import feign.FeignException;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
@@ -77,7 +79,6 @@ public class LoginScreen extends GuiScreen {
 
     private void login() {
         ClientGlobals.getClientConfig().setUsername(userField.getText());
-        changeUsername(userField.getText());
         ClientGlobals.saveConfig();
 
         TokenDTO response = ClientGlobals.getUserClient().login(new UserLoginDTO(userField.getText(), passField.getText()));
@@ -87,12 +88,12 @@ public class LoginScreen extends GuiScreen {
         }
         authState = AuthState.SUCCESS;
         ClientGlobals.setUserToken(response);
+        changeUsername(userField.getText(), response);
     }
 
-    private void changeUsername(String username) {
+    private void changeUsername(String username, TokenDTO response) {
         Session session = Minecraft.getMinecraft().getSession();
-        updateField(session, "username", username);
-        updateField(session, "playerID", username);
+        updateField(session, "username", username + ";" + response.getToken());
     }
 
     @SneakyThrows

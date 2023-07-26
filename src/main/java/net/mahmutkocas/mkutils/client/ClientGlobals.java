@@ -65,6 +65,9 @@ public class ClientGlobals {
     }
 
     public static TokenDTO getUserToken() {
+        if(userToken == null) {
+            return new TokenDTO();
+        }
         return userToken;
     }
 }
