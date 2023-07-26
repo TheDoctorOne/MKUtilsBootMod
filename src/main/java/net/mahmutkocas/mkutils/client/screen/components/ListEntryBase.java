@@ -11,6 +11,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.util.ResourceLocation;
 
@@ -25,6 +26,7 @@ public abstract class ListEntryBase implements GuiListExtended.IGuiListEntry {
     protected final Minecraft mc;
     protected final ResourceLocation contentIcon;
     protected DynamicTexture icon;
+    protected BufferedImage bufferedIcon;
 
     public ListEntryBase(@NotNull String resourcePath) {
         this.mc = Minecraft.getMinecraft();
@@ -36,6 +38,7 @@ public abstract class ListEntryBase implements GuiListExtended.IGuiListEntry {
     {
         this.mc.getTextureManager().bindTexture(resourceLocation);
         GlStateManager.enableBlend();
+//        mc.currentScreen.drawTexturedModalRect(x,y, 0,0, 32, 32);
         Gui.drawModalRectWithCustomSizedTexture(x, y, 0.0F, 0.0F, 32, 32, 32.0F, 32.0F);
         GlStateManager.disableBlend();
     }
@@ -49,20 +52,20 @@ public abstract class ListEntryBase implements GuiListExtended.IGuiListEntry {
         }
         else
         {
-            BufferedImage bufferedimage;
-            bufferedimage = ClientGlobals.getImageByURL(imageUrl);
-            if (bufferedimage == null) {
-                return;
+            if(bufferedIcon == null) {
+                bufferedIcon = ClientGlobals.getImageByURL(imageUrl);
             }
 
-            if (this.icon == null)
+            if (bufferedIcon != null && this.icon == null)
             {
-                this.icon = new DynamicTexture(bufferedimage.getWidth(), bufferedimage.getHeight());
+                this.icon = new DynamicTexture(bufferedIcon.getWidth(), bufferedIcon.getHeight());
                 this.mc.getTextureManager().loadTexture(this.contentIcon, this.icon);
+                bufferedIcon.getRGB(0, 0, bufferedIcon.getWidth(), bufferedIcon.getHeight(), this.icon.getTextureData(), 0, bufferedIcon.getWidth());
             }
 
-            bufferedimage.getRGB(0, 0, bufferedimage.getWidth(), bufferedimage.getHeight(), this.icon.getTextureData(), 0, bufferedimage.getWidth());
             this.icon.updateDynamicTexture();
         }
     }
+
+
 }

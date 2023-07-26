@@ -1,7 +1,5 @@
 package net.mahmutkocas.mkutils.client.screen;
 
-import com.mojang.authlib.properties.Property;
-import com.mojang.authlib.properties.PropertyMap;
 import feign.FeignException;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
@@ -9,15 +7,12 @@ import net.mahmutkocas.mkutils.client.ClientGlobals;
 import net.mahmutkocas.mkutils.client.enums.AuthState;
 import net.mahmutkocas.mkutils.client.screen.components.PassField;
 import net.mahmutkocas.mkutils.common.dto.TokenDTO;
-import net.mahmutkocas.mkutils.common.dto.UserDTO;
 import net.mahmutkocas.mkutils.common.dto.UserLoginDTO;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.util.Session;
-import org.apache.commons.lang3.reflect.FieldUtils;
 import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
