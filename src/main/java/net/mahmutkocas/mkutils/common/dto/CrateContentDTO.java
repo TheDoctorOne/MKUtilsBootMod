@@ -7,7 +7,9 @@ import lombok.*;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class CrateContentDTO {
     private String name;
+    private String imageUrl;
     private int chance;
 }

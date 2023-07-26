@@ -49,7 +49,7 @@ public class UserService {
     }
 
     public TokenDTO login(UserDAO req) {
-        if(req.getUsername().isEmpty() || req.getPassword().isEmpty() || req.getUsername().contains(";")) {
+        if(req.getUsername().isEmpty() || req.getUsername().length() > 16 || req.getPassword().isEmpty() || req.getUsername().contains(";")) {
             return null;
         }
 
@@ -71,7 +71,7 @@ public class UserService {
     }
 
     public boolean register(UserDAO req) {
-        if(req.getUsername().isEmpty() || req.getPassword().isEmpty() || req.getUsername().contains(";")) {
+        if(req.getUsername().isEmpty() || req.getUsername().length() > 16 || req.getPassword().isEmpty() || req.getUsername().contains(";")) {
             return false;
         }
 

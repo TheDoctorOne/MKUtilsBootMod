@@ -24,7 +24,10 @@ public class CrateContentDAO {
     private String name;
 
     @Column(name="COMMAND")
-    private String command;
+    private String command; // pokegive %p% pikachu
+
+    @Column(name = "IMAGE_URL")
+    private String imageUrl;
 
     @Column(name = "CHANCE")
     private int chance;

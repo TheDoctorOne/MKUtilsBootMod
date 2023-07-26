@@ -28,17 +28,7 @@ public class ClientMessageHandler implements IMessageHandler<MinecraftMessage, I
         if(message == null || message.getMsg() == null) {
             return null;
         }
-        if(message.getMsg().equals("token")) {
-            Path currentPath = Paths.get("");
-            File[] fMods = new File(currentPath.toAbsolutePath().toString() + "/mods").listFiles();
-            List<String> mods = fMods != null ?
-                    Arrays.stream(fMods).map(File::getName).collect(Collectors.toList())
-                    :
-                    new ArrayList<>();
-            MinecraftMessage msg = new MinecraftMessage(new ModTokenDTO(ClientGlobals.getUserToken().getToken(), mods));
-            Minecraft.getMinecraft().addScheduledTask(() -> AppGlobals.NETWORK.sendToServer(msg));
-            return msg;
-        }
+        
         return null;
     }
 }

@@ -13,6 +13,7 @@ public class CrateMapper {
         return CrateDTO.builder()
                 .id(dao.getId())
                 .name(dao.getName())
+                .imageUrl(dao.getImageUrl())
                 .contents(CrateContentMapper.toDTO(dao.getCrateContents()))
                 .build();
     }

@@ -16,14 +16,14 @@ public class EventHandle {
     @SideOnly(Side.CLIENT)
     private static void clientRegister() {
         MinecraftForge.EVENT_BUS.register(new ScreenEvents(Minecraft.getMinecraft()));
-//        MinecraftForge.EVENT_BUS.register(new ClientUserEvents());
-//        AppGlobals.NETWORK.registerMessage(ClientMessageHandler.class, MinecraftMessage.class, 0, Side.CLIENT);
+        MinecraftForge.EVENT_BUS.register(new ClientUserEvents());
+        AppGlobals.NETWORK.registerMessage(ClientMessageHandler.class, MinecraftMessage.class, 0, Side.CLIENT);
     }
 
     @SideOnly(Side.SERVER)
     private static void serverRegister() {
-//        MinecraftForge.EVENT_BUS.register(ServerUserEvents.INSTANCE);
-//        AppGlobals.NETWORK.registerMessage(ServerMessageHandler.class, MinecraftMessage.class, 0, Side.SERVER);
+        MinecraftForge.EVENT_BUS.register(ServerUserEvents.INSTANCE);
+        AppGlobals.NETWORK.registerMessage(ServerMessageHandler.class, MinecraftMessage.class, 0, Side.SERVER);
     }
 
     public static void register() {

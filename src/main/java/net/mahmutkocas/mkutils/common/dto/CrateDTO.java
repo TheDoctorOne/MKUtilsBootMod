@@ -12,5 +12,6 @@ import java.util.List;
 public class CrateDTO {
     private Long id;
     private String name;
+    private String imageUrl;
     private List<CrateContentDTO> contents;
 }

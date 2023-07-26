@@ -21,25 +21,6 @@ import java.util.Locale;
 public class ServerMessageHandler implements IMessageHandler<MinecraftMessage, IMessage> {
     @Override
     public IMessage onMessage(MinecraftMessage message, MessageContext ctx) {
-        try {
-            ModTokenDTO dto = message.getMsg(ModTokenDTO.class);
-            String token = dto.getToken();
-            String username = ServerGlobals.USER_SERVICE.getUserByToken(new TokenDTO(token));
-
-            if(username == null || !username.equals(ctx.getServerHandler().player.getName().toLowerCase(Locale.ENGLISH))) {
-                if(ctx.getServerHandler().player.hasDisconnected()) {
-                   return null;
-                }
-                ctx.getServerHandler().player.connection.disconnect(new TextComponentString("Giriş Yapın!"));
-                return null;
-            }
-            ServerUserEvents.INSTANCE.userConfirmed(username);
-        } catch (JsonProcessingException e) {
-            log.error(
-                    "Message parse error! User: " + ctx.getServerHandler().player.getName() + " Message: " + message.getMsg()
-                    , e);
-        }
-
         return null;
     }
 }

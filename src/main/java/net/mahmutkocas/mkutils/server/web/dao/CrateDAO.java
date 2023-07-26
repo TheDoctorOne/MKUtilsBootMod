@@ -23,6 +23,9 @@ public class CrateDAO {
     @Column(name = "NAME")
     private String name;
 
+    @Column(name = "IMAGE_URL")
+    private String imageUrl;
+
     @ManyToMany
     @JoinTable(
             name = "create_contents",

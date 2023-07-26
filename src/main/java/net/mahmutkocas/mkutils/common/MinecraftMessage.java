@@ -3,46 +3,62 @@ package net.mahmutkocas.mkutils.common;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.netty.buffer.ByteBuf;
-import lombok.SneakyThrows;
+import lombok.*;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 import java.nio.charset.StandardCharsets;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class MinecraftMessage implements IMessage {
 
+    private static final ObjectMapper MAPPER = new ObjectMapper();
+
+    public enum MCMessageType {
+        NONE,
+        CRATE_LIST,
+        CRATE_OPEN,
+        CRATE_RESULT
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    private static class MessageWrapper {
+        private MCMessageType type = MCMessageType.NONE;
+        private String msg;
+    }
+
+    private MCMessageType type = MCMessageType.NONE;
     private String msg;
-    private final ObjectMapper mapper = new ObjectMapper();
 
-    public MinecraftMessage() {
-        msg = null;
-    }
-
-    public MinecraftMessage(String msg) {
-        this.msg = msg;
-    }
 
     @SneakyThrows
-    public MinecraftMessage(Object msg) {
-        this.msg = mapper.writeValueAsString(msg);
-    }
-
-    public String getMsg() {
-        return msg;
+    public MinecraftMessage(MCMessageType type, Object msg) {
+        this.type = type;
+        this.msg = MAPPER.writeValueAsString(msg);
     }
 
     public <T> T getMsg(Class<T> tClass) throws JsonProcessingException {
-        return mapper.readValue(msg, tClass);
+        return MAPPER.readValue(msg, tClass);
     }
 
+    @SneakyThrows
     @Override
     public void toBytes(ByteBuf buf) {
         if(msg==null) {
             return;
         }
-        buf.writeBytes(msg.getBytes());
+        buf.writeBytes(MAPPER.writeValueAsString(this).getBytes());
     }
+
+    @SneakyThrows
     @Override
     public void fromBytes(ByteBuf buf) {
-        msg = buf.toString(StandardCharsets.UTF_8);
+        MinecraftMessage message = MAPPER.readValue(buf.toString(StandardCharsets.UTF_8), this.getClass());
+        this.setType(message.getType());
+        this.setMsg(message.getMsg());
     }
 }

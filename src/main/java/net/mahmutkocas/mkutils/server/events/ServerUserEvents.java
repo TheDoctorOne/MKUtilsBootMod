@@ -27,128 +27,29 @@ import java.util.concurrent.ConcurrentHashMap;
 @SideOnly(Side.SERVER)
 public class ServerUserEvents {
 
-    @Getter
-    @Setter
-    @AllArgsConstructor
-    private static class UserLoginInfo {
-        private double x;
-        private double y;
-        private double z;
-        private float yaw;
-        private float pitch;
-        private float tick;
-
-        public void increaseTick() {
-            tick += 1;
-        }
-    }
-
-    private static final Integer TIMEOUT_TICK = 400;
-    private final Map<EntityPlayerMP, UserLoginInfo> userQueue = new ConcurrentHashMap<>();
-
     public static final ServerUserEvents INSTANCE = new ServerUserEvents();
 
     private ServerUserEvents() {
-
     }
 
     @SubscribeEvent
     public void onTick(TickEvent.ServerTickEvent event) {
-        if(event.phase == TickEvent.Phase.END) {
-            return;
-        }
-
-        List<EntityPlayerMP> toRemove = new ArrayList<>();
-        for(EntityPlayerMP user : userQueue.keySet()) {
-            if(user.hasDisconnected()) {
-                toRemove.add(user);
-                continue;
-            }
-            UserLoginInfo info = userQueue.get(user);
-            if(info.getTick() > TIMEOUT_TICK) {
-                user.connection.disconnect(new TextComponentString("Giriş Yapınız!"));
-                toRemove.add(user);
-                continue;
-            }
-            info.increaseTick();
-            user.setLocationAndAngles(info.getX(), info.getY(), info.getZ(), info.getYaw(), info.getPitch());
-        }
-
-        for (EntityPlayerMP user : toRemove) {
-            userQueue.remove(user);
-        }
     }
 
-    public void userConfirmed(String username) {
-        EntityPlayerMP target = null;
-        for(EntityPlayerMP user : userQueue.keySet()) {
-            if(user.getName().toLowerCase(Locale.ENGLISH).equals(username)) {
-                target = user;
-                break;
-            }
-        }
-        if(target == null) {
-            return;
-        }
-
-//        userQueue.remove(target);
-    }
 
     @SubscribeEvent
     public void onPlayerJoin(EntityJoinWorldEvent event) {
-        if(event.getEntity() instanceof EntityPlayerMP) {
-            EntityPlayerMP player = (EntityPlayerMP) event.getEntity();
-            userQueue.put(player, new UserLoginInfo(player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch, 0));
-            AppGlobals.NETWORK.sendTo(new MinecraftMessage("token"), (EntityPlayerMP) event.getEntity());
-        }
     }
 
     @SubscribeEvent
     public void onCommandRequest(CommandEvent event) {
-        if(userQueue.containsKey(event.getSender())) {
-            event.setCanceled(true);
-        }
     }
 
     @SubscribeEvent
     public void onEntityEvent(EntityEvent event) {
-        cancelTossEvent(event, event.getEntity());
     }
 
     @SubscribeEvent
     public void onItemTossEvent(ItemTossEvent event) {
-        if(event.getEntity() instanceof EntityItem) {
-            cancelTossEvent(event, ((EntityItem) event.getEntity()).getThrower());
-        }
-    }
-
-    private void cancelTossEvent(Event event, Entity entity) {
-        if(!(entity instanceof EntityPlayerMP)) {
-            return;
-        }
-        if(!userQueue.containsKey(entity)) {
-            return;
-        }
-        if(event.isCancelable()) {
-            event.setCanceled(true);
-        }
-        if(event.hasResult()) {
-            event.setResult(Event.Result.DENY);
-        }
-    }
-
-    private void cancelTossEvent(ItemTossEvent event, String entityName) {
-        Optional<EntityPlayerMP> playerOpt = userQueue.keySet().stream().filter(entityPlayerMP -> entityPlayerMP.getName().equals(entityName)).findFirst();
-        if(!playerOpt.isPresent()) {
-            return;
-        }
-        EntityPlayerMP player = playerOpt.get();
-
-        if(event.isCancelable()) {
-            event.setCanceled(true);
-        }
-        if(event.hasResult()) {
-            event.setResult(Event.Result.DENY);
-        }
     }
 }
