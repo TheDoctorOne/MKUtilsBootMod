@@ -27,7 +27,7 @@ public class CrateContentScreen extends GuiScreen {
 
     @Override
     public void initGui() {
-        list = new CrateContentList(this, crateDTO, this.width, this.height, 32, this.height - 64, 36);
+        list = new CrateContentList(this, crateDTO, this.width, this.height, 32, this.height - 32, 36);
         list.setContents();
         this.buttonList.add(new GuiButton(1, 5, 5, 75, 20, "Geri"));
         this.buttonList.add(new GuiButton(2, this.width/2-75, this.height-25, 150, 20, "Kasayi Aç"));
@@ -48,7 +48,7 @@ public class CrateContentScreen extends GuiScreen {
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         list.drawScreen(mouseX, mouseY, partialTicks);
         float strLen = fontRenderer.getStringWidth(getCrateDTO().getName());
-        fontRenderer.drawString(getCrateDTO().getName(), (this.width-strLen)/2, 5, Color.WHITE.getRGB(),false);
+        fontRenderer.drawString(getCrateDTO().getName(), (this.width-strLen)/2, 12, Color.WHITE.getRGB(),false);
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
 

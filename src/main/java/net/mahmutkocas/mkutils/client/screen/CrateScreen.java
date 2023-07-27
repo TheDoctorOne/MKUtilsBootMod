@@ -22,7 +22,7 @@ public class CrateScreen extends GuiScreen {
 
     @Override
     public void initGui() {
-        crateList = new CrateList(this, this.width, this.height, 32, this.height - 64, 36);
+        crateList = new CrateList(this, this.width, this.height, 32, this.height - 32, 36);
         crateList.setCrates(Arrays.asList(
                 createCrate(1L),
                 new CrateDTO(2L, "Gengar", "https://pokemongostop.org/images/pokemon/gengar.png", new ArrayList<>()),
@@ -34,6 +34,7 @@ public class CrateScreen extends GuiScreen {
                 new CrateDTO(8L, "Gengar", "https://pokemongostop.org/images/pokemon/gengar.png", new ArrayList<>())
         ));
         this.buttonList.add(new GuiButton(1, this.width/2-75, 5, 150, 20, "Geri"));
+        this.buttonList.add(new GuiButton(2, this.width/2-75, this.height-25, 150, 20, "Kasayı Göster"));
     }
 
     private CrateDTO createCrate(Long id) {
@@ -50,6 +51,8 @@ public class CrateScreen extends GuiScreen {
         super.actionPerformed(button);
         if(button.id == 1) {
             parent.mc.displayGuiScreen(parent);
+        } else if(button.id == 2) {
+            crateList.onSelectedAction();
         }
     }
 
