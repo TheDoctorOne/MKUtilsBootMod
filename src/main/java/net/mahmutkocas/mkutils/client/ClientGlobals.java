@@ -10,6 +10,7 @@ import net.mahmutkocas.mkutils.client.network.web.client.UserClient;
 import net.mahmutkocas.mkutils.common.dto.TokenDTO;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.commons.codec.digest.DigestUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -78,21 +79,50 @@ public class ClientGlobals {
         return userToken;
     }
 
+    private static BufferedImage getCachedImage(String url) throws IOException {
+        File folder = new File("imageCache");
+        File file = new File(folder, DigestUtils.sha1Hex(url));
+        if(!folder.isDirectory()) {
+            folder.mkdirs();
+        }
+        if(file.exists()) {
+            return ImageIO.read(file);
+        }
+        return null;
+    }
+
+    private static void saveImageToCache(String url, BufferedImage image) throws IOException {
+        File folder = new File("imageCache");
+        File file = new File(folder, DigestUtils.sha1Hex(url));
+        if(!folder.isDirectory()) {
+            folder.mkdirs();
+        }
+        if(!file.exists()) {
+            ImageIO.write(image, "png", file);
+        }
+    }
+
     public static BufferedImage getImageByURL(String url) {
-        BufferedImage bufferedimage;
         try
         {
+            BufferedImage bufferedimage = getCachedImage(url);
+            if(bufferedimage != null) {
+                return bufferedimage;
+            }
+
             bufferedimage = ImageIO.read(new URL(url));
             if(bufferedimage.getWidth() != 64 || bufferedimage.getHeight() != 64) {
                 bufferedimage = ClientGlobals.resizeImage(bufferedimage, 64, 64);
             }
+
+            saveImageToCache(url, bufferedimage);
+            return bufferedimage;
         }
         catch (Throwable throwable)
         {
             log.error("Invalid icon for {}", url, throwable);
             return null;
         }
-        return bufferedimage;
     }
 
     public static BufferedImage resizeImage(BufferedImage img, int newW, int newH) {
