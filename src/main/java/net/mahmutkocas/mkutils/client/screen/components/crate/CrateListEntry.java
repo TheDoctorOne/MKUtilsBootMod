@@ -1,15 +1,14 @@
-package net.mahmutkocas.mkutils.client.screen.components;
+package net.mahmutkocas.mkutils.client.screen.components.crate;
 
 import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
+import net.mahmutkocas.mkutils.client.screen.components.ListEntryBase;
 import net.mahmutkocas.mkutils.common.dto.CrateDTO;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
-
-import java.awt.*;
 
 @Log4j2
 @Getter
@@ -55,11 +54,11 @@ public class CrateListEntry extends ListEntryBase {
     @Override
     public boolean mousePressed(int slotIndex, int mouseX, int mouseY, int mouseEvent, int relativeX, int relativeY) {
 
-        owner.setSelectedCrateIndex(slotIndex);
+        owner.setSelectedIndex(slotIndex);
 
         if (Minecraft.getSystemTime() - this.lastClickTime < 250L)
         {
-            this.owner.openSelected();
+            this.owner.onSelectedAction();
         }
 
         this.lastClickTime = Minecraft.getSystemTime();

@@ -1,8 +1,8 @@
 package net.mahmutkocas.mkutils.client.screen;
 
-import net.mahmutkocas.mkutils.client.screen.components.CrateList;
+import net.mahmutkocas.mkutils.client.screen.components.crate.CrateList;
+import net.mahmutkocas.mkutils.common.dto.CrateContentDTO;
 import net.mahmutkocas.mkutils.common.dto.CrateDTO;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 
@@ -22,10 +22,9 @@ public class CrateScreen extends GuiScreen {
 
     @Override
     public void initGui() {
-        super.initGui();
-        crateList = new CrateList( this.width, this.height, 32, this.height - 64, 36);
+        crateList = new CrateList(this, this.width, this.height, 32, this.height - 64, 36);
         crateList.setCrates(Arrays.asList(
-                new CrateDTO(1L, "Pikachu", "https://mito3dprint.nyc3.digitaloceanspaces.com/3dmodels/suggestions/list/pokemon.png", new ArrayList<>()),
+                createCrate(1L),
                 new CrateDTO(2L, "Gengar", "https://pokemongostop.org/images/pokemon/gengar.png", new ArrayList<>()),
                 new CrateDTO(3L, "Pikachu", "https://mito3dprint.nyc3.digitaloceanspaces.com/3dmodels/suggestions/list/pokemon.png", new ArrayList<>()),
                 new CrateDTO(4L, "Gengar", "https://pokemongostop.org/images/pokemon/gengar.png", new ArrayList<>()),
@@ -35,6 +34,15 @@ public class CrateScreen extends GuiScreen {
                 new CrateDTO(8L, "Gengar", "https://pokemongostop.org/images/pokemon/gengar.png", new ArrayList<>())
         ));
         this.buttonList.add(new GuiButton(1, this.width/2-75, 5, 150, 20, "Geri"));
+    }
+
+    private CrateDTO createCrate(Long id) {
+        return new CrateDTO(id, "Pikachu", "https://mito3dprint.nyc3.digitaloceanspaces.com/3dmodels/suggestions/list/pokemon.png",
+                Arrays.asList(
+                    new CrateContentDTO("Dikachu", "https://mito3dprint.nyc3.digitaloceanspaces.com/3dmodels/suggestions/list/pokemon.png", 10),
+                    new CrateContentDTO("Gengar", "https://pokemongostop.org/images/pokemon/gengar.png", 10),
+                    new CrateContentDTO("Dikachu", "https://mito3dprint.nyc3.digitaloceanspaces.com/3dmodels/suggestions/list/pokemon.png", 10)
+                ));
     }
 
     @Override

@@ -1,12 +1,13 @@
-package net.mahmutkocas.mkutils.client.screen.components;
+package net.mahmutkocas.mkutils.client.screen.components.crate;
 
 import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
-import net.mahmutkocas.mkutils.client.screen.CrateScreen;
+import net.mahmutkocas.mkutils.client.screen.components.ListEntryBase;
 import net.mahmutkocas.mkutils.common.dto.CrateContentDTO;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 
 @Log4j2
@@ -15,9 +16,9 @@ import net.minecraft.client.renderer.GlStateManager;
 public class CrateContentEntry extends ListEntryBase {
 
     private CrateContentDTO contentDTO;
-    private CrateScreen parent;
+    private GuiScreen parent;
 
-    public CrateContentEntry(@NotNull CrateScreen parent, @NotNull CrateContentDTO contentDTO) {
+    public CrateContentEntry(@NotNull GuiScreen parent, @NotNull CrateContentDTO contentDTO) {
         super(contentDTO.getImageUrl());
         this.parent = parent;
         this.contentDTO = contentDTO;
