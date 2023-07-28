@@ -63,7 +63,7 @@ public class LoginScreen extends GuiScreen {
     private void onLoginButton() {
         try {
             login();
-        } catch (FeignException.FeignClientException.Unauthorized unauthorized){
+        } catch (FeignException unauthorized){
             log.error("Server unauthorized!", unauthorized);
             authState = AuthState.FAIL;
         } catch (RuntimeException rte) {

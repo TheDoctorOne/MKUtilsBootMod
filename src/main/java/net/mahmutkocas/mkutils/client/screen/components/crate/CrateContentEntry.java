@@ -1,6 +1,5 @@
 package net.mahmutkocas.mkutils.client.screen.components.crate;
 
-import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
@@ -18,7 +17,7 @@ public class CrateContentEntry extends ListEntryBase {
     private CrateContentDTO contentDTO;
     private GuiScreen parent;
 
-    public CrateContentEntry(@NotNull GuiScreen parent, @NotNull CrateContentDTO contentDTO) {
+    public CrateContentEntry(GuiScreen parent, CrateContentDTO contentDTO) {
         super(contentDTO.getImageUrl());
         this.parent = parent;
         this.contentDTO = contentDTO;

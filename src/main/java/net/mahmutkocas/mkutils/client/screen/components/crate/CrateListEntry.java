@@ -1,6 +1,5 @@
 package net.mahmutkocas.mkutils.client.screen.components.crate;
 
-import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
@@ -19,7 +18,7 @@ public class CrateListEntry extends ListEntryBase {
     private CrateList owner;
     private long lastClickTime;
 
-    public CrateListEntry(@NotNull CrateList owner,@NotNull CrateDTO crateDTO) {
+    public CrateListEntry(CrateList owner, CrateDTO crateDTO) {
         super(crateDTO.getImageUrl());
         this.owner = owner;
         this.crateDTO = crateDTO;

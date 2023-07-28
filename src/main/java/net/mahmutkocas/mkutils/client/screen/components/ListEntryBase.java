@@ -1,6 +1,5 @@
 package net.mahmutkocas.mkutils.client.screen.components;
 
-import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
@@ -28,7 +27,7 @@ public abstract class ListEntryBase implements GuiListExtended.IGuiListEntry {
     protected DynamicTexture icon;
     protected BufferedImage bufferedIcon;
 
-    public ListEntryBase(@NotNull String resourcePath) {
+    public ListEntryBase(String resourcePath) {
         this.mc = Minecraft.getMinecraft();
         this.contentIcon = new ResourceLocation("crate/" + resourcePath + "/icon");
         this.icon = (DynamicTexture)this.mc.getTextureManager().getTexture(this.contentIcon);

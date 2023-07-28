@@ -6,6 +6,7 @@ import io.netty.buffer.ByteBuf;
 import lombok.*;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 @Getter
@@ -41,7 +42,7 @@ public class MinecraftMessage implements IMessage {
         this.msg = MAPPER.writeValueAsString(msg);
     }
 
-    public <T> T getMsg(Class<T> tClass) throws JsonProcessingException {
+    public <T> T getMsg(Class<T> tClass) throws IOException {
         return MAPPER.readValue(msg, tClass);
     }
 

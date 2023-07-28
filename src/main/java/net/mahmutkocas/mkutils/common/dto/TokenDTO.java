@@ -8,5 +8,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TokenDTO {
+    @Builder.Default
     private String token = "";
 }
