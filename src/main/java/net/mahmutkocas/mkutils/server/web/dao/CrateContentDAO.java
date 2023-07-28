@@ -17,7 +17,7 @@ public class CrateContentDAO {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    @Column(name = "ID", updatable = false, nullable = false)
+    @Column(name = "ID")
     private Long id;
 
     @Column(name = "NAME")
@@ -29,8 +29,11 @@ public class CrateContentDAO {
     @Column(name = "IMAGE_URL")
     private String imageUrl;
 
+    @Column(name = "COLOR")
+    private Integer color;
+
     @Column(name = "CHANCE")
-    private int chance;
+    private Integer chance;
 
     @ManyToMany(mappedBy = "crateContents")
     private Set<CrateDAO> crates;

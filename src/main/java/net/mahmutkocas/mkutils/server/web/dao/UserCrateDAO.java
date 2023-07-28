@@ -16,7 +16,7 @@ public class UserCrateDAO {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    @Column(name = "ID",updatable = false, nullable = false)
+    @Column(name = "ID")
     private Long id;
 
     @Column(name = "CLAIMED")

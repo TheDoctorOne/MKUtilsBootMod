@@ -17,7 +17,7 @@ public class CrateDAO {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    @Column(name = "ID",updatable = false, nullable = false)
+    @Column(name = "ID")
     private Long id;
 
     @Column(name = "NAME")
@@ -25,6 +25,9 @@ public class CrateDAO {
 
     @Column(name = "IMAGE_URL")
     private String imageUrl;
+
+    @Column(name = "COLOR")
+    private Integer color;
 
     @ManyToMany
     @JoinTable(
