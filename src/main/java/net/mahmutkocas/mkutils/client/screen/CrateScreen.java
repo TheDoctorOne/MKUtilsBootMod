@@ -1,5 +1,7 @@
 package net.mahmutkocas.mkutils.client.screen;
 
+import lombok.Getter;
+import lombok.Setter;
 import net.mahmutkocas.mkutils.client.screen.components.crate.CrateList;
 import net.mahmutkocas.mkutils.common.dto.CrateContentDTO;
 import net.mahmutkocas.mkutils.common.dto.CrateDTO;
@@ -10,6 +12,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+@Setter
+@Getter
 public class CrateScreen extends GuiScreen {
 
     private CrateList crateList;
@@ -18,6 +22,7 @@ public class CrateScreen extends GuiScreen {
 
     public CrateScreen(GuiScreen parent) {
         this.parent = parent;
+        crateList = new CrateList(this, this.width, this.height, 32, this.height - 32, 36);
     }
 
     public CrateScreen parent(GuiScreen parent) {
@@ -27,7 +32,7 @@ public class CrateScreen extends GuiScreen {
 
     @Override
     public void initGui() {
-        crateList = new CrateList(this, this.width, this.height, 32, this.height - 32, 36);
+        crateList.setDimensions(this.width, this.height, 32, this.height - 32);
         crateList.setCrates(Arrays.asList(
                 createCrate(1L),
                 new CrateDTO(2L, "Gengar", "https://pokemongostop.org/images/pokemon/gengar.png", new ArrayList<>()),

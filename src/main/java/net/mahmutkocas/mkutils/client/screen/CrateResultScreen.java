@@ -1,7 +1,11 @@
 package net.mahmutkocas.mkutils.client.screen;
 
+import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.client.gui.GuiScreen;
 
+@Getter
+@Setter
 public class CrateResultScreen extends GuiScreen {
 
     private GuiScreen parent;
@@ -10,8 +14,4 @@ public class CrateResultScreen extends GuiScreen {
         this.parent = parent;
     }
 
-    public CrateResultScreen parent(GuiScreen parent) {
-        this.parent = parent;
-        return this;
-    }
 }

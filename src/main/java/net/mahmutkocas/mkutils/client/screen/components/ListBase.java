@@ -33,7 +33,7 @@ public abstract class ListBase<T extends GuiListExtended.IGuiListEntry> extends 
     }
 
     public T getSelected() {
-        if(selectedIndex >= getSize()) {
+        if(selectedIndex >= getSize() || selectedIndex < 0) {
             return null;
         }
         return list.get(selectedIndex);

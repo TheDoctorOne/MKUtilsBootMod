@@ -27,11 +27,6 @@ public class CrateContentScreen extends GuiScreen {
         this.crateDTO = crateDTO;
     }
 
-    public CrateContentScreen parent(GuiScreen parent) {
-        this.parent = parent;
-        return this;
-    }
-
     public CrateContentScreen crate(CrateDTO crateDTO) {
         this.crateDTO = crateDTO;
         return this;

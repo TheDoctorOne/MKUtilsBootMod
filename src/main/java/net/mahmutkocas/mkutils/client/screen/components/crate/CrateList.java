@@ -21,6 +21,8 @@ public class CrateList extends ListBase<CrateListEntry> {
 
     public void setCrates(List<CrateDTO> crateDTOs) {
         crateDTOs.sort(Comparator.comparing(CrateDTO::getId));
+        setSelectedIndex(-1);
+        list.clear();
         for(CrateDTO dto : crateDTOs) {
             list.add(new CrateListEntry(this, dto));
         }
@@ -30,7 +32,6 @@ public class CrateList extends ListBase<CrateListEntry> {
     public void handleSelectedAction() {
         owner.mc.displayGuiScreen(
                 ScreenProvider.INSTANCE.getCrateContentScreen()
-                        .parent(owner)
                         .crate(getSelected().getCrateDTO())
         );
     }

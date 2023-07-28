@@ -3,7 +3,9 @@ package net.mahmutkocas.mkutils.client.network.mc;
 import lombok.SneakyThrows;
 import net.mahmutkocas.mkutils.AppGlobals;
 import net.mahmutkocas.mkutils.client.ClientGlobals;
+import net.mahmutkocas.mkutils.client.ScreenProvider;
 import net.mahmutkocas.mkutils.common.MinecraftMessage;
+import net.mahmutkocas.mkutils.common.dto.CrateDTOList;
 import net.mahmutkocas.mkutils.common.dto.ModTokenDTO;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -27,6 +29,13 @@ public class ClientMessageHandler implements IMessageHandler<MinecraftMessage, I
     public IMessage onMessage(MinecraftMessage message, MessageContext ctx) {
         if(message == null || message.getMsg() == null) {
             return null;
+        }
+
+        switch (message.getType()) {
+            case CRATE_LIST:
+                CrateDTOList crates = message.getMsg(CrateDTOList.class);
+                ScreenProvider.INSTANCE.getCrateScreen().getCrateList().setCrates(crates.getCrateDTOs());
+                break;
         }
         
         return null;
