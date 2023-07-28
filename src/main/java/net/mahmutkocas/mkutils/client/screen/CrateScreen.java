@@ -34,16 +34,16 @@ public class CrateScreen extends GuiScreen {
     @Override
     public void initGui() {
         crateList.setDimensions(this.width, this.height, 32, this.height - 32);
-        crateList.setCrates(Arrays.asList(
-                createCrate(1L),
-                new CrateDTO(2L, "Gengar", "https://pokemongostop.org/images/pokemon/gengar.png", new ArrayList<>(), Color.magenta.getRGB()),
-                new CrateDTO(3L, "Pikachu", "https://mito3dprint.nyc3.digitaloceanspaces.com/3dmodels/suggestions/list/pokemon.png", new ArrayList<>(), Color.pink.getRGB()),
-                new CrateDTO(4L, "Gengar", "https://pokemongostop.org/images/pokemon/gengar.png", new ArrayList<>(), Color.red.getRGB()),
-                new CrateDTO(5L, "Pikachu", "https://mito3dprint.nyc3.digitaloceanspaces.com/3dmodels/suggestions/list/pokemon.png", new ArrayList<>(), Color.BLUE.getRGB()),
-                new CrateDTO(6L, "Gengar", "https://pokemongostop.org/images/pokemon/gengar.png", new ArrayList<>(), Color.YELLOW.getRGB()),
-                new CrateDTO(7L, "Pikachu", "https://mito3dprint.nyc3.digitaloceanspaces.com/3dmodels/suggestions/list/pokemon.png", new ArrayList<>(), Color.CYAN.getRGB()),
-                new CrateDTO(8L, "Gengar", "https://pokemongostop.org/images/pokemon/gengar.png", new ArrayList<>(), Color.GREEN.getRGB())
-        ));
+//        crateList.setCrates(Arrays.asList(
+//                createCrate(1L),
+//                new CrateDTO(2L, "Gengar", "https://pokemongostop.org/images/pokemon/gengar.png", new ArrayList<>(), Color.magenta.getRGB()),
+//                new CrateDTO(3L, "Pikachu", "https://mito3dprint.nyc3.digitaloceanspaces.com/3dmodels/suggestions/list/pokemon.png", new ArrayList<>(), Color.pink.getRGB()),
+//                new CrateDTO(4L, "Gengar", "https://pokemongostop.org/images/pokemon/gengar.png", new ArrayList<>(), Color.red.getRGB()),
+//                new CrateDTO(5L, "Pikachu", "https://mito3dprint.nyc3.digitaloceanspaces.com/3dmodels/suggestions/list/pokemon.png", new ArrayList<>(), Color.BLUE.getRGB()),
+//                new CrateDTO(6L, "Gengar", "https://pokemongostop.org/images/pokemon/gengar.png", new ArrayList<>(), Color.YELLOW.getRGB()),
+//                new CrateDTO(7L, "Pikachu", "https://mito3dprint.nyc3.digitaloceanspaces.com/3dmodels/suggestions/list/pokemon.png", new ArrayList<>(), Color.CYAN.getRGB()),
+//                new CrateDTO(8L, "Gengar", "https://pokemongostop.org/images/pokemon/gengar.png", new ArrayList<>(), Color.GREEN.getRGB())
+//        ));
         this.buttonList.add(new GuiButton(1, this.width/2-75, 5, 150, 20, "Geri"));
         this.buttonList.add(new GuiButton(2, this.width/2-75, this.height-25, 150, 20, "Kasayı Göster"));
     }
