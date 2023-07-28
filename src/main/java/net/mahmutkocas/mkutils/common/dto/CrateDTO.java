@@ -2,6 +2,7 @@ package net.mahmutkocas.mkutils.common.dto;
 
 import lombok.*;
 
+import java.awt.*;
 import java.util.List;
 
 @Builder
@@ -14,4 +15,6 @@ public class CrateDTO {
     private String name;
     private String imageUrl;
     private List<CrateContentDTO> contents;
+    @Builder.Default
+    private Integer color = Color.WHITE.getRGB();
 }

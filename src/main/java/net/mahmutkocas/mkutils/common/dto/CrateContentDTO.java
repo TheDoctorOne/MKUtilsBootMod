@@ -2,6 +2,8 @@ package net.mahmutkocas.mkutils.common.dto;
 
 import lombok.*;
 
+import java.awt.*;
+
 @Builder
 @Setter
 @Getter
@@ -11,5 +13,7 @@ import lombok.*;
 public class CrateContentDTO {
     private String name;
     private String imageUrl;
-    private int chance;
+    private Integer chance;
+    @Builder.Default
+    private Integer color = Color.WHITE.getRGB();
 }

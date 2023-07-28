@@ -4,13 +4,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import net.mahmutkocas.mkutils.client.ClientGlobals;
-import net.mahmutkocas.mkutils.client.screen.CrateScreen;
-import net.mahmutkocas.mkutils.common.dto.CrateContentDTO;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.util.ResourceLocation;
 
@@ -19,30 +15,49 @@ import java.awt.image.BufferedImage;
 @Log4j2
 @Getter
 @Setter
-public abstract class ListEntryBase implements GuiListExtended.IGuiListEntry {
+public class GuiImageDraw {
+
     protected static final ResourceLocation UNKNOWN_SERVER = new ResourceLocation("textures/misc/unknown_server.png");
 
     protected final Minecraft mc;
-    protected final ResourceLocation contentIcon;
+    protected ResourceLocation contentIcon;
     protected DynamicTexture icon;
     protected BufferedImage bufferedIcon;
 
-    public ListEntryBase(String resourcePath) {
+    /**
+     * General usage is passing image url as @resourcePath.
+     * */
+    public GuiImageDraw(String resourcePath) {
         this.mc = Minecraft.getMinecraft();
-        this.contentIcon = new ResourceLocation("crate/" + resourcePath + "/icon");
+        this.contentIcon = new ResourceLocation("resource/" + resourcePath + "/icon");
         this.icon = (DynamicTexture)this.mc.getTextureManager().getTexture(this.contentIcon);
     }
 
-    protected void drawTextureAt(int x, int y, ResourceLocation resourceLocation)
+    /**
+     * General usage is passing image url as @resourcePath.
+     * */
+    public void updateResourcePath(String resourcePath) {
+        this.contentIcon = new ResourceLocation("resource/" + resourcePath + "/icon");
+        this.icon = (DynamicTexture)this.mc.getTextureManager().getTexture(this.contentIcon);
+    }
+
+    public void drawTextureAt(int x, int y, ResourceLocation resourceLocation)
     {
         this.mc.getTextureManager().bindTexture(resourceLocation);
         GlStateManager.enableBlend();
-//        mc.currentScreen.drawTexturedModalRect(x,y, 0,0, 32, 32);
         Gui.drawModalRectWithCustomSizedTexture(x, y, 0.0F, 0.0F, 32, 32, 32.0F, 32.0F);
         GlStateManager.disableBlend();
     }
 
-    protected void prepareImage(String imageUrl)
+    public void drawTextureAt(int x, int y, float width, float height)
+    {
+        this.mc.getTextureManager().bindTexture(contentIcon);
+        GlStateManager.enableBlend();
+        Gui.drawModalRectWithCustomSizedTexture(x, y, 0.0F, 0.0F, (int) width, (int) height, width, height);
+        GlStateManager.disableBlend();
+    }
+
+    public void prepareImage(String imageUrl)
     {
         if (imageUrl == null)
         {
@@ -65,6 +80,4 @@ public abstract class ListEntryBase implements GuiListExtended.IGuiListEntry {
             this.icon.updateDynamicTexture();
         }
     }
-
-
 }

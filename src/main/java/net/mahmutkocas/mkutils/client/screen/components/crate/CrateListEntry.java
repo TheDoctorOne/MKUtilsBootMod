@@ -3,7 +3,7 @@ package net.mahmutkocas.mkutils.client.screen.components.crate;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
-import net.mahmutkocas.mkutils.client.screen.components.ListEntryBase;
+import net.mahmutkocas.mkutils.client.screen.components.ListEntry;
 import net.mahmutkocas.mkutils.common.dto.CrateDTO;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.GlStateManager;
 @Log4j2
 @Getter
 @Setter
-public class CrateListEntry extends ListEntryBase {
+public class CrateListEntry extends ListEntry {
 
     private CrateDTO crateDTO;
     private CrateList owner;
@@ -32,8 +32,6 @@ public class CrateListEntry extends ListEntryBase {
     public void drawEntry(int slotIndex, int x, int y, int listWidth, int slotHeight, int mouseX, int mouseY, boolean isSelected, float partialTicks) {
 
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        this.mc.getTextureManager().bindTexture(Gui.ICONS);
-        Gui.drawModalRectWithCustomSizedTexture(x + listWidth - 15, y, 0, 0, 10, 8, 256.0F, 256.0F);
 
         prepareImage(getCrateDTO().getImageUrl());
 
@@ -45,7 +43,9 @@ public class CrateListEntry extends ListEntryBase {
         {
             this.drawTextureAt(x, y, UNKNOWN_SERVER);
         }
-        this.mc.fontRenderer.drawString(getCrateDTO().getName(), x + 32 + 3, y + 1, 16777215);
+        this.mc.fontRenderer.drawString(getCrateDTO().getName(), x + 32 + 3, y + slotHeight/2 - 3,
+                getCrateDTO().getColor() != null ? getCrateDTO().getColor() : 16777215
+        );
     }
 
 
