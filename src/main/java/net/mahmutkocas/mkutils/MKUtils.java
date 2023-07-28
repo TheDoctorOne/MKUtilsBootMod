@@ -2,9 +2,6 @@ package net.mahmutkocas.mkutils;
 
 import lombok.SneakyThrows;
 import net.mahmutkocas.mkutils.client.ClientGlobals;
-import net.mahmutkocas.mkutils.server.ServerGlobals;
-import net.mahmutkocas.mkutils.server.mc.deepnetwork.NetworkSystem;
-import net.mahmutkocas.mkutils.server.web.WebApplication;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.dedicated.DedicatedServer;
 import net.minecraftforge.fml.common.Mod;
@@ -27,16 +24,6 @@ public class MKUtils
     @EventHandler
     private void serverStarting(FMLServerAboutToStartEvent event) {
         event.getServer().isDedicatedServer();
-        event = event;
-    }
-
-    @EventHandler
-    private void serverStarting(FMLServerStartingEvent event) {
-        if(event.getServer().isDedicatedServer()) {
-            ServerGlobals.setWEB(WebApplication.start(event.getServer()));
-
-            logger.info("Web App Run!");
-        }
     }
 
     @EventHandler
@@ -49,12 +36,6 @@ public class MKUtils
             ClientGlobals.runUserClient();
             ClientGlobals.readConfig();
             logger.info("User client started!");
-        } else {
-            // Time to magic!
-            FMLServerHandler serverHandler = FMLServerHandler.instance();
-            if(serverHandler.getServer().isDedicatedServer()) {
-                updateNetworkServer(serverHandler.getServer());
-            }
         }
     }
 
@@ -64,27 +45,4 @@ public class MKUtils
         EventHandle.register();
     }
 
-    @EventHandler
-    public void serverStop(FMLServerStoppingEvent event) {
-        if(FMLServerHandler.instance().getServer().isDedicatedServer()) {
-            ServerGlobals.WEB.stop();
-        }
-    }
-
-
-    @SneakyThrows
-    private void updateNetworkServer(MinecraftServer server) {
-        Field[] fields = MinecraftServer.class.getDeclaredFields();
-        Field networkField = null;
-
-        for(Field field : fields) {
-            if(field.getType() == net.minecraft.network.NetworkSystem.class) {
-                networkField = field;
-                break;
-            }
-        }
-
-        networkField.setAccessible(true);
-        networkField.set(server, new NetworkSystem(server));
-    }
 }
