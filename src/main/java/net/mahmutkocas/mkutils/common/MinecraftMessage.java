@@ -16,6 +16,7 @@ import java.nio.charset.StandardCharsets;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class MinecraftMessage implements IMessage {
 
     @Getter

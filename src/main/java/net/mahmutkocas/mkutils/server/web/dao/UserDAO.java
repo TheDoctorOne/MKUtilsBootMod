@@ -17,7 +17,7 @@ import java.util.List;
 public class UserDAO {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy= GenerationType.SEQUENCE)
     @Column(name = "ID")
     private Long id;
 
@@ -36,7 +36,9 @@ public class UserDAO {
     @Column(name = "TOKEN_EXP_DATE")
     private LocalDateTime tokenExpDate;
 
-    @OneToMany
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @OneToMany(fetch = FetchType.EAGER)
     private List<UserCrateDAO> crates;
 
 }

@@ -22,9 +22,13 @@ public class UserCrateDAO {
     @Column(name = "CLAIMED")
     private boolean claimed;
 
-    @ManyToOne
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @ManyToOne(fetch = FetchType.EAGER)
     private CrateDAO crateDAO;
 
-    @ManyToOne
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @ManyToOne(fetch = FetchType.EAGER)
     private UserDAO userDAO;
 }

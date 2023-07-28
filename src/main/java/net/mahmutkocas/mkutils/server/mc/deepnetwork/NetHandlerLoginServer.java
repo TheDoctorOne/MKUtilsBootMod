@@ -122,7 +122,7 @@ public class NetHandlerLoginServer extends net.minecraft.server.network.NetHandl
 
         try {
             Long userId = Long.parseLong(userIdStr);
-            String user = ServerGlobals.USER_SERVICE.getUserByToken(new TokenDTO(userId + ";" + token));
+            String user = ServerGlobals.WEBSERVICE.getUserByToken(new TokenDTO(userId + ";" + token));
             if(user == null || !user.equals(username.toLowerCase(Locale.ENGLISH))) {
                 log.error("Expected user: " + user + " Illegal user: " + loginGameProfile.toString());
                 this.disconnect(new TextComponentString("Lütfen Tekrar Giriş Yapınız!"));

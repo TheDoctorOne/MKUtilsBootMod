@@ -35,6 +35,8 @@ public class CrateContentDAO {
     @Column(name = "CHANCE")
     private Integer chance;
 
-    @ManyToMany(mappedBy = "crateContents")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "crateContents")
     private Set<CrateDAO> crates;
 }

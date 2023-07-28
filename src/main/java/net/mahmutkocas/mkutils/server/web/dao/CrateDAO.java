@@ -29,7 +29,9 @@ public class CrateDAO {
     @Column(name = "COLOR")
     private Integer color;
 
-    @ManyToMany
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "create_contents",
             joinColumns = @JoinColumn(name = "crate_id"),
@@ -37,6 +39,8 @@ public class CrateDAO {
     )
     private Set<CrateContentDAO> crateContents;
 
-    @OneToMany
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @OneToMany(fetch = FetchType.EAGER)
     private Set<UserCrateDAO> userCrates;
 }

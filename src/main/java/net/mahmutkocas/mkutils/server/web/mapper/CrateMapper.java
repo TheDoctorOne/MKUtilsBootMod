@@ -23,4 +23,8 @@ public class CrateMapper {
         return daoSet.stream().map(CrateMapper::toDTO).collect(Collectors.toList());
     }
 
+    public static List<CrateDTO> toDTO(List<CrateDAO> daoSet) {
+        return daoSet.stream().map(CrateMapper::toDTO).collect(Collectors.toList());
+    }
+
 }
