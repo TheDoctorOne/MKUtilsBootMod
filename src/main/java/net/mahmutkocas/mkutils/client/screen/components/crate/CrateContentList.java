@@ -9,15 +9,13 @@ import java.util.Comparator;
 
 public class CrateContentList extends ListBase<CrateContentEntry> {
 
-    private final CrateDTO crateDTO;
 
-    public CrateContentList(GuiScreen owner, CrateDTO crateDTO, int widthIn, int heightIn, int topIn, int bottomIn, int slotHeightIn) {
+    public CrateContentList(GuiScreen owner, int widthIn, int heightIn, int topIn, int bottomIn, int slotHeightIn) {
         super(owner, widthIn, heightIn, topIn, bottomIn, slotHeightIn);
-        this.crateDTO = crateDTO;
         this.setShowSelectionBox(false);
     }
 
-    public void setContents() {
+    public void setContents(CrateDTO crateDTO) {
         crateDTO.getContents().sort(Comparator.comparing(CrateContentDTO::getName));
         for(CrateContentDTO dto : crateDTO.getContents()) {
             this.list.add(new CrateContentEntry(owner, dto));

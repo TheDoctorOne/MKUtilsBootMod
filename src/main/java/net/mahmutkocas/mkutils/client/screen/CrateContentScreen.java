@@ -9,6 +9,7 @@ import net.mahmutkocas.mkutils.common.dto.CrateDTO;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 
+import javax.annotation.Nullable;
 import java.awt.*;
 import java.io.IOException;
 
@@ -16,19 +17,32 @@ import java.io.IOException;
 @Setter
 public class CrateContentScreen extends GuiScreen {
 
-    private final GuiScreen parent;
-    private final CrateDTO crateDTO;
+    private GuiScreen parent;
+    @Nullable
+    private CrateDTO crateDTO;
     private CrateContentList list;
 
-    public CrateContentScreen(GuiScreen parent, CrateDTO crateDTO) {
+    public CrateContentScreen(GuiScreen parent, @Nullable CrateDTO crateDTO) {
         this.parent = parent;
         this.crateDTO = crateDTO;
     }
 
+    public CrateContentScreen parent(GuiScreen parent) {
+        this.parent = parent;
+        return this;
+    }
+
+    public CrateContentScreen crate(CrateDTO crateDTO) {
+        this.crateDTO = crateDTO;
+        return this;
+    }
+
     @Override
     public void initGui() {
-        list = new CrateContentList(this, crateDTO, this.width, this.height, 32, this.height - 32, 36);
-        list.setContents();
+        list = new CrateContentList(this, this.width, this.height, 32, this.height - 32, 36);
+        if(crateDTO != null) {
+            list.setContents(crateDTO);
+        }
         this.buttonList.add(new GuiButton(1, 5, 5, 75, 20, "Geri"));
         this.buttonList.add(new GuiButton(2, this.width/2-75, this.height-25, 150, 20, "Kasayi Aç"));
     }
@@ -47,9 +61,11 @@ public class CrateContentScreen extends GuiScreen {
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         list.drawScreen(mouseX, mouseY, partialTicks);
-        float strLen = fontRenderer.getStringWidth(getCrateDTO().getName());
-        fontRenderer.drawString(getCrateDTO().getName(), (this.width-strLen)/2, 12, Color.WHITE.getRGB(),false);
-        super.drawScreen(mouseX, mouseY, partialTicks);
+        if(getCrateDTO() != null) {
+            float strLen = fontRenderer.getStringWidth(getCrateDTO().getName());
+            fontRenderer.drawString(getCrateDTO().getName(), (this.width - strLen) / 2, 12, Color.WHITE.getRGB(), false);
+            super.drawScreen(mouseX, mouseY, partialTicks);
+        }
     }
 
 
@@ -72,6 +88,9 @@ public class CrateContentScreen extends GuiScreen {
     }
 
     private void openCrate() {
+        if(crateDTO == null) {
+            return;
+        }
         AppGlobals.NETWORK.sendToServer(new MinecraftMessage(MinecraftMessage.MCMessageType.CRATE_OPEN, crateDTO));
         parent.mc.displayGuiScreen(parent);
     }

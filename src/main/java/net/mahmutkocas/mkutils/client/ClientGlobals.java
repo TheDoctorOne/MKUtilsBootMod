@@ -7,7 +7,12 @@ import feign.jackson.JacksonEncoder;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import net.mahmutkocas.mkutils.client.network.web.client.UserClient;
+import net.mahmutkocas.mkutils.client.screen.CrateContentScreen;
+import net.mahmutkocas.mkutils.client.screen.CrateResultScreen;
+import net.mahmutkocas.mkutils.client.screen.CrateScreen;
+import net.mahmutkocas.mkutils.client.screen.LoginScreen;
 import net.mahmutkocas.mkutils.common.dto.TokenDTO;
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -29,6 +34,7 @@ public class ClientGlobals {
     private static TokenDTO userToken;
     private static UserClient userClient;
     private static ClientConfig clientConfig;
+
 
     public static void runUserClient() {
         userClient = Feign.builder()

@@ -2,6 +2,7 @@ package net.mahmutkocas.mkutils.client.screen.components.crate;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.mahmutkocas.mkutils.client.ScreenProvider;
 import net.mahmutkocas.mkutils.client.screen.CrateContentScreen;
 import net.mahmutkocas.mkutils.client.screen.CrateScreen;
 import net.mahmutkocas.mkutils.client.screen.components.ListBase;
@@ -27,6 +28,10 @@ public class CrateList extends ListBase<CrateListEntry> {
 
     @Override
     public void handleSelectedAction() {
-        owner.mc.displayGuiScreen(new CrateContentScreen(owner, getSelected().getCrateDTO()));
+        owner.mc.displayGuiScreen(
+                ScreenProvider.INSTANCE.getCrateContentScreen()
+                        .parent(owner)
+                        .crate(getSelected().getCrateDTO())
+        );
     }
 }

@@ -1,6 +1,7 @@
 package net.mahmutkocas.mkutils.client.screen;
 
 import net.mahmutkocas.mkutils.client.ClientGlobals;
+import net.mahmutkocas.mkutils.client.ScreenProvider;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiMultiplayer;
@@ -11,9 +12,13 @@ import java.io.IOException;
 public class MultiplayerScreen extends GuiMultiplayer {
 
     private final GuiScreen parentScreen;
-    public MultiplayerScreen(Minecraft mc) {
-        super(mc.currentScreen);
-        this.mc = mc;
+
+    /**
+     * Unique Screen, Minecraft seems like needs this to initialize every time.
+     * */
+    public MultiplayerScreen(GuiScreen parent) {
+        super(parent);
+        this.mc = parent.mc;
         parentScreen = mc.currentScreen;
     }
 
@@ -27,12 +32,17 @@ public class MultiplayerScreen extends GuiMultiplayer {
 
     @Override
     protected void actionPerformed(GuiButton button) throws IOException {
-        super.actionPerformed(button);
-        if(button.id == 99) {
-            this.mc.displayGuiScreen(new LoginScreen(this, ClientGlobals.getClientConfig().getUsername()));
+        if (button.id == 0) {
+            this.mc.displayGuiScreen(this.parentScreen);
         }
-        if(button.id == 100) {
-            this.mc.displayGuiScreen(new CrateScreen(this));
+        else if (button.id == 8) {
+            this.mc.displayGuiScreen(new MultiplayerScreen(parentScreen));
+        } else if(button.id == 99) {
+            this.mc.displayGuiScreen(ScreenProvider.INSTANCE.getLoginScreen().parent(this).username(ClientGlobals.getClientConfig().getUsername()));
+        } else if(button.id == 100) {
+            this.mc.displayGuiScreen(ScreenProvider.INSTANCE.getCrateScreen().parent(this));
+        } else {
+            super.actionPerformed(button);
         }
     }
 }

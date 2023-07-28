@@ -13,11 +13,16 @@ import java.util.Arrays;
 public class CrateScreen extends GuiScreen {
 
     private CrateList crateList;
-    private final GuiScreen parent;
+    private GuiScreen parent;
 
 
     public CrateScreen(GuiScreen parent) {
         this.parent = parent;
+    }
+
+    public CrateScreen parent(GuiScreen parent) {
+        this.parent = parent;
+        return this;
     }
 
     @Override

@@ -1,16 +1,15 @@
 package net.mahmutkocas.mkutils;
 
-import lombok.SneakyThrows;
 import net.mahmutkocas.mkutils.client.ClientGlobals;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.dedicated.DedicatedServer;
+import net.mahmutkocas.mkutils.client.ScreenProvider;
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.event.*;
-import net.minecraftforge.fml.server.FMLServerHandler;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerAboutToStartEvent;
 import org.apache.logging.log4j.Logger;
-
-import java.lang.reflect.Field;
 
 @Mod(modid = MKUtils.MODID, name = MKUtils.NAME, version = MKUtils.VERSION)
 public class MKUtils
@@ -45,4 +44,8 @@ public class MKUtils
         EventHandle.register();
     }
 
+    @EventHandler
+    public void postInit(FMLPostInitializationEvent event) {
+        ScreenProvider.initialize(Minecraft.getMinecraft());
+    }
 }

@@ -21,19 +21,32 @@ import java.lang.reflect.Field;
 @Log4j2
 public class LoginScreen extends GuiScreen {
 
-    private final GuiScreen parent;
+    private GuiScreen parent;
 
     private GuiTextField userField;
     private PassField passField;
 
-    private final String initialUserName;
+    private String initialUserName;
 
     private AuthState authState = AuthState.NONE;
 
-    public LoginScreen(GuiScreen parent, String username) {
-        this.parent = parent;
-        this.mc = parent.mc;
+    public LoginScreen(Minecraft mc, String username) {
+        this.mc = mc;
+        this.parent = mc.currentScreen;
         initialUserName = username;
+    }
+
+    public LoginScreen parent(GuiScreen parent) {
+        this.parent = parent;
+        return this;
+    }
+
+    public LoginScreen username(String username) {
+        this.initialUserName = username;
+        if(userField != null) {
+            userField.setText(username);
+        }
+        return this;
     }
 
     @Override

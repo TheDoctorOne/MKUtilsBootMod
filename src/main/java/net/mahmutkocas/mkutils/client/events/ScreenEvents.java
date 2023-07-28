@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import net.mahmutkocas.mkutils.client.screen.MultiplayerScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiMultiplayer;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -17,8 +18,8 @@ public class ScreenEvents {
 
     @SubscribeEvent
     public void redirectScreen(GuiOpenEvent event) {
-        if(event.getGui() instanceof GuiMultiplayer) {
-            event.setGui(new MultiplayerScreen(mc));
+        if(event.getGui() instanceof GuiMultiplayer && !(event.getGui() instanceof MultiplayerScreen) ) {
+            event.setGui(new MultiplayerScreen(mc.currentScreen));
         }
     }
 }
