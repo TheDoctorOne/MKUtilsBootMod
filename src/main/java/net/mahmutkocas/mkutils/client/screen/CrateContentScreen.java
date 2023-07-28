@@ -58,7 +58,9 @@ public class CrateContentScreen extends GuiScreen {
         list.drawScreen(mouseX, mouseY, partialTicks);
         if(getCrateDTO() != null) {
             float strLen = fontRenderer.getStringWidth(getCrateDTO().getName());
-            fontRenderer.drawString(getCrateDTO().getName(), (this.width - strLen) / 2, 12, Color.WHITE.getRGB(), false);
+            fontRenderer.drawString(getCrateDTO().getName(), (this.width - strLen) / 2, 12,
+                    getCrateDTO().getColor() != null ? getCrateDTO().getColor() : Color.WHITE.getRGB()
+                    , false);
             super.drawScreen(mouseX, mouseY, partialTicks);
         }
     }
