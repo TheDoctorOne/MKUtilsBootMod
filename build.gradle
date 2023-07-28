@@ -10,7 +10,6 @@ buildscript {
 
 plugins {
     id 'java'
-    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
     id "com.github.johnrengelman.shadow" version "1.2.3"
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
@@ -45,17 +44,10 @@ minecraft {
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 }
 
-dependencyManagement {
-    imports {
-        mavenBom "org.springframework.cloud:spring-cloud-dependencies:2021.0.8"
-    }
-}
-
 dependencies {
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-parent', version: '3.1.2'
     compile 'org.springframework.boot:spring-boot-starter-data-jpa:2.7.14'
     compile 'org.springframework.boot:spring-boot-starter-web:2.7.14'
-    compile 'org.springframework.cloud:spring-cloud-starter-openfeign'
     compile group: 'io.github.openfeign', name: 'feign-jackson', version: '9.3.1'
     compileOnly 'org.projectlombok:lombok:1.18.28'
     compile 'com.h2database:h2:2.1.214'
