@@ -3,6 +3,7 @@ package net.mahmutkocas.mkutils.client.screen;
 import lombok.Getter;
 import lombok.Setter;
 import net.mahmutkocas.mkutils.AppGlobals;
+import net.mahmutkocas.mkutils.client.ScreenProvider;
 import net.mahmutkocas.mkutils.client.screen.components.crate.CrateContentList;
 import net.mahmutkocas.mkutils.common.MinecraftMessage;
 import net.mahmutkocas.mkutils.common.dto.CrateDTO;
@@ -55,6 +56,7 @@ public class CrateContentScreen extends GuiScreen {
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        this.drawDefaultBackground();
         list.drawScreen(mouseX, mouseY, partialTicks);
         if(getCrateDTO() != null) {
             float strLen = fontRenderer.getStringWidth(getCrateDTO().getName());

@@ -5,6 +5,7 @@ import net.mahmutkocas.mkutils.AppGlobals;
 import net.mahmutkocas.mkutils.client.ClientGlobals;
 import net.mahmutkocas.mkutils.client.ScreenProvider;
 import net.mahmutkocas.mkutils.common.MinecraftMessage;
+import net.mahmutkocas.mkutils.common.dto.CrateContentDTO;
 import net.mahmutkocas.mkutils.common.dto.CrateDTOList;
 import net.mahmutkocas.mkutils.common.dto.ModTokenDTO;
 import net.minecraft.client.Minecraft;
@@ -35,6 +36,11 @@ public class ClientMessageHandler implements IMessageHandler<MinecraftMessage, I
             case CRATE_LIST:
                 CrateDTOList crates = message.getMsg(CrateDTOList.class);
                 ScreenProvider.INSTANCE.getCrateScreen().getCrateList().setCrates(crates.getCrateDTOs());
+                break;
+            case CRATE_RESULT:
+                CrateContentDTO result = message.getMsg(CrateContentDTO.class);
+                ScreenProvider.INSTANCE.getCrateResultScreen().setContent(result);
+                Minecraft.getMinecraft().displayGuiScreen(ScreenProvider.INSTANCE.getCrateResultScreen());
                 break;
         }
         
