@@ -57,8 +57,6 @@ public class ServerMessageHandler implements IMessageHandler<MinecraftMessage, I
                         MinecraftMessage.MCMessageType.CRATE_LIST, new CrateDTOList(CrateMapper.toDTO(crates)) );
             case CRATE_OPEN:
                 CrateContentDAO res = ServerGlobals.WEBSERVICE.openCrate(playerName, userDAO.getCrates(), message.getMsg(CrateDTO.class));
-                String cmd = res.getCommand().replaceAll("%p%", playerName);
-                FMLServerHandler.instance().getServer().commandManager.executeCommand(FMLServerHandler.instance().getServer(), cmd);
                 return new MinecraftMessage(MinecraftMessage.MCMessageType.CRATE_RESULT, CrateContentMapper.toDTO(res));
         }
 

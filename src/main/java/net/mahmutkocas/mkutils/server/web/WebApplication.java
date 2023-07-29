@@ -71,7 +71,7 @@ public class WebApplication {
     @Autowired
     private UserCrateRepository userCrateRepository;
 
-//    @Bean
+    @Bean
     public void data() {
         UserDAO user = userRepository.findByUsername("test").get();
 

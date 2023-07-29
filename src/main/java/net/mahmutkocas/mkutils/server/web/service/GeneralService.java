@@ -11,6 +11,7 @@ import net.mahmutkocas.mkutils.common.dto.TokenDTO;
 import net.mahmutkocas.mkutils.server.web.repository.CrateRepository;
 import net.mahmutkocas.mkutils.server.web.repository.UserCrateRepository;
 import net.mahmutkocas.mkutils.server.web.repository.UserRepository;
+import net.minecraftforge.fml.server.FMLServerHandler;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -92,13 +93,24 @@ public class GeneralService {
             CrateContentDAO prev = null;
             for(CrateContentDAO crateContent : crateContents) {
                 total += crateContent.getChance();
-                if(rand < total) {
+                if(rand < total && prev != null) {
+                    openCrate(player, userCrateDAO, prev);
                     return prev;
                 }
                 prev = crateContent;
             }
         }
         return null;
+    }
+
+    private static void openCrate(String player, UserCrateDAO userCrateDAO, CrateContentDAO prev) {
+        String[] cmds = prev.getCommand().split("%c%");
+        for(String cmd : cmds) {
+            String targetCmd = cmd.replaceAll("%p%", player);
+            log.info("{} opened a crate {}:{}! And WON {}! Command: {}", player, userCrateDAO.getId(), userCrateDAO.getCrateDAO().getName(), prev.getName(), targetCmd);
+            FMLServerHandler.instance().getServer().commandManager.executeCommand(FMLServerHandler.instance().getServer(), targetCmd);
+            userCrateDAO.setClaimed(true);
+        }
     }
 
     public UserDAO getUserByName(String name) {
