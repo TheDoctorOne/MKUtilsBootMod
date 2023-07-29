@@ -5,9 +5,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import net.mahmutkocas.mkutils.common.dto.CrateDTO;
 import net.mahmutkocas.mkutils.server.web.dao.CrateContentDAO;
+import net.mahmutkocas.mkutils.server.web.dao.CrateDAO;
 import net.mahmutkocas.mkutils.server.web.dao.UserCrateDAO;
 import net.mahmutkocas.mkutils.server.web.dao.UserDAO;
 import net.mahmutkocas.mkutils.common.dto.TokenDTO;
+import net.mahmutkocas.mkutils.server.web.dto.file.CrateFileDTO;
+import net.mahmutkocas.mkutils.server.web.mapper.file.CrateContentFileMapper;
+import net.mahmutkocas.mkutils.server.web.mapper.file.CrateFileMapper;
+import net.mahmutkocas.mkutils.server.web.repository.CrateContentRepository;
 import net.mahmutkocas.mkutils.server.web.repository.CrateRepository;
 import net.mahmutkocas.mkutils.server.web.repository.UserCrateRepository;
 import net.mahmutkocas.mkutils.server.web.repository.UserRepository;
@@ -17,7 +22,6 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -28,6 +32,7 @@ public class GeneralService {
 
     private final UserRepository userRepository;
     private final CrateRepository crateRepository;
+    private final CrateContentRepository crateContentRepository;
     private final UserCrateRepository userCrateRepository;
     private final Random random = new Random();
 
@@ -57,6 +62,44 @@ public class GeneralService {
             log.error("Token exception", e);
         }
         return null;
+    }
+
+    public boolean saveCrate(CrateFileDTO dto) {
+        CrateDAO current = crateRepository.findByName(dto.getName()).orElse(null);
+        if(current != null) {
+            return false;
+        }
+        List<CrateContentDAO> contentDAOs = CrateContentFileMapper.toDAO(dto.getContents());
+        crateContentRepository.saveAll(contentDAOs);
+
+        CrateDAO dao = CrateFileMapper.toDAO(dto);
+        dao.setCrateContents(new HashSet<>(contentDAOs));
+
+        crateRepository.save(dao);
+        return true;
+    }
+
+    public void giveUserCrate(String username, String crateName) {
+        UserDAO userDAO = userRepository
+                .findByUsername(username.toLowerCase(Locale.ENGLISH)).orElse(null);
+
+        if(userDAO == null) {
+            throw new IllegalArgumentException("Kullanici bulunamadi!");
+        }
+
+        CrateDAO crateDAO = crateRepository.findByName(crateName).orElse(null);
+        if(crateDAO == null) {
+            throw new IllegalArgumentException("Kasa bulunamadi!");
+        }
+        UserCrateDAO userCrate = UserCrateDAO.builder()
+                .crateDAO(crateDAO)
+                .userDAO(userDAO)
+                .claimed(false)
+                .build();
+
+        userCrateRepository.save(userCrate);
+        userDAO.getCrates().add(userCrate);
+        userRepository.save(userDAO);
     }
 
     public CrateContentDAO openCrate(String player, List<UserCrateDAO> userCrates, CrateDTO target) {
@@ -90,24 +133,45 @@ public class GeneralService {
             rand %= total;
 
             total = 0;
-            CrateContentDAO prev = null;
             for(CrateContentDAO crateContent : crateContents) {
                 total += crateContent.getChance();
-                if(rand < total && prev != null) {
-                    openCrate(player, userCrateDAO, prev);
-                    return prev;
+                if(rand < total) {
+                    claimCrate(player, userCrateDAO, crateContent);
+                    return crateContent;
                 }
-                prev = crateContent;
             }
         }
         return null;
     }
 
-    private static void openCrate(String player, UserCrateDAO userCrateDAO, CrateContentDAO prev) {
-        String[] cmds = prev.getCommand().split("%c%");
+    private void claimCrate(String player, UserCrateDAO userCrateDAO, CrateContentDAO current) {
+        String[] cmds = current.getCommand().split(";");
         for(String cmd : cmds) {
-            String targetCmd = cmd.replaceAll("%p%", player);
-            log.info("{} opened a crate {}:{}! And WON {}! Command: {}", player, userCrateDAO.getId(), userCrateDAO.getCrateDAO().getName(), prev.getName(), targetCmd);
+            if(cmd.trim().isEmpty()) {
+                continue;
+            }
+            String targetCmd = cmd.trim().replaceAll("%p%", player);
+
+            while(targetCmd.contains("%r%")) {
+                String[] splt = targetCmd.split("%r%");
+                int minInd = splt[1].indexOf("[min:");
+                int maxInd = splt[1].indexOf("%max:");
+                int closeInd= splt[1].indexOf("]");
+                String minStr = splt[1].substring(minInd+5, maxInd);
+                String maxStr = splt[1].substring(maxInd+5, closeInd);
+                int min = Integer.parseInt(minStr);
+                int max = Integer.parseInt(maxStr);
+                int rand = random.nextInt();
+                if(rand < 0) {
+                    rand *= -1;
+                }
+                rand %= (max-min);
+                rand += min;
+                String target = "%r%\\[min:" + minStr + "%max:"+ maxStr + "]";
+                targetCmd = targetCmd.replaceFirst(target, String.valueOf(rand));
+            }
+
+            log.info("{} opened a crate {}:{}! And WON {}! Command: {}", player, userCrateDAO.getId(), userCrateDAO.getCrateDAO().getName(), current.getName(), targetCmd);
             FMLServerHandler.instance().getServer().commandManager.executeCommand(FMLServerHandler.instance().getServer(), targetCmd);
             userCrateDAO.setClaimed(true);
         }

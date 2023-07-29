@@ -5,7 +5,9 @@ import net.mahmutkocas.mkutils.server.web.dao.UserCrateDAO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface CrateRepository extends JpaRepository<CrateDAO, Long> {
-    CrateDAO findByName(String name);
+    Optional<CrateDAO> findByName(String name);
 }

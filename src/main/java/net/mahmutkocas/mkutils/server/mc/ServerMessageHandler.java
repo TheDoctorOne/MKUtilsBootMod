@@ -3,7 +3,6 @@ package net.mahmutkocas.mkutils.server.mc;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import net.mahmutkocas.mkutils.common.MinecraftMessage;
-import net.mahmutkocas.mkutils.common.dto.CrateContentDTO;
 import net.mahmutkocas.mkutils.common.dto.CrateDTO;
 import net.mahmutkocas.mkutils.common.dto.CrateDTOList;
 import net.mahmutkocas.mkutils.server.ServerGlobals;
@@ -18,7 +17,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.fml.server.FMLServerHandler;
 
 import java.util.ArrayList;
 import java.util.List;
