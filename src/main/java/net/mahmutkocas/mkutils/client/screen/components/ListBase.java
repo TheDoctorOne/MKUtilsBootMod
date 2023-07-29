@@ -32,6 +32,24 @@ public abstract class ListBase<T extends GuiListExtended.IGuiListEntry> extends 
         return list.get(index);
     }
 
+    @Override
+    protected void updateItemPos(int entryID, int insideLeft, int yPos, float partialTicks) {
+        if(this.getListEntry(entryID) == null) {
+            return;
+        }
+        this.getListEntry(entryID).updatePosition(entryID, insideLeft, yPos, partialTicks);
+    }
+
+    @Override
+    protected void drawSlot(int slotIndex, int xPos, int yPos, int heightIn, int mouseXIn, int mouseYIn, float partialTicks)
+    {
+        if(this.getListEntry(slotIndex) == null) {
+            return;
+        }
+        this.getListEntry(slotIndex).drawEntry(slotIndex, xPos, yPos, this.getListWidth(), heightIn, mouseXIn, mouseYIn, this.isMouseYWithinSlotBounds(mouseYIn) && this.getSlotIndexFromScreenCoords(mouseXIn, mouseYIn) == slotIndex, partialTicks);
+    }
+
+
     public T getSelected() {
         if(selectedIndex >= getSize() || selectedIndex < 0) {
             return null;

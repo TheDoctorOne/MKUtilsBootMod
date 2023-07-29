@@ -15,7 +15,7 @@ public class CrateContentList extends ListBase<CrateContentEntry> {
         this.setShowSelectionBox(false);
     }
 
-    public void setContents(CrateDTO crateDTO) {
+    public synchronized void setContents(CrateDTO crateDTO) {
         crateDTO.getContents().sort(Comparator.comparing(CrateContentDTO::getName));
         for(CrateContentDTO dto : crateDTO.getContents()) {
             this.list.add(new CrateContentEntry(owner, dto));

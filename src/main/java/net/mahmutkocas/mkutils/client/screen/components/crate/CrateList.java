@@ -21,7 +21,7 @@ public class CrateList extends ListBase<CrateListEntry> {
         super(owner, widthIn, heightIn, topIn, bottomIn, slotHeightIn);
     }
 
-    public void setCrates(List<CrateDTO> crateDTOs) {
+    public synchronized void setCrates(List<CrateDTO> crateDTOs) {
         crateDTOs.sort(Comparator.comparing(CrateDTO::getId));
         setSelectedIndex(-1);
         list.clear();

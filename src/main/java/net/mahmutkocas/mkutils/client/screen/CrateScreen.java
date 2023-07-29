@@ -17,7 +17,7 @@ import java.util.Arrays;
 @Getter
 public class CrateScreen extends GuiScreen {
 
-    private CrateList crateList;
+    private final CrateList crateList;
     private GuiScreen parent;
 
 
