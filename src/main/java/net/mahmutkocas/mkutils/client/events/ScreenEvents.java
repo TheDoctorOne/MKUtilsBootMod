@@ -9,6 +9,7 @@ import net.mahmutkocas.mkutils.client.screen.PauseScreen;
 import net.mahmutkocas.mkutils.common.MinecraftMessage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiIngameMenu;
+import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiMultiplayer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.client.event.GuiOpenEvent;
@@ -25,11 +26,19 @@ public class ScreenEvents {
     @SubscribeEvent
     public void redirectScreen(GuiOpenEvent event) {
         if(event.getGui() instanceof GuiMultiplayer && !(event.getGui() instanceof MultiplayerScreen) ) {
-            event.setGui(new MultiplayerScreen(mc.currentScreen));
+            displayMultiplayerScreen(event);
         } else if(event.getGui() instanceof CrateScreen) {
             AppGlobals.NETWORK.sendToServer(new MinecraftMessage(MinecraftMessage.MCMessageType.GET_CRATES));
-        } else if(event.getGui() instanceof GuiIngameMenu && !(event.getGui() instanceof PauseScreen) ) {
+        } else if(event.getGui() instanceof GuiIngameMenu) {
             event.setGui(new PauseScreen());
+        }
+    }
+
+    private void displayMultiplayerScreen(GuiOpenEvent event) {
+        if(mc.currentScreen instanceof GuiIngameMenu) {
+            event.setGui(new MultiplayerScreen(new GuiMainMenu()));
+        } else {
+            event.setGui(new MultiplayerScreen(mc.currentScreen));
         }
     }
 }

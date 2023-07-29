@@ -15,6 +15,8 @@ import java.util.List;
 @Setter
 public class CrateList extends ListBase<CrateListEntry> {
 
+    private Long lastCrateUpdateTime;
+
     public CrateList(CrateScreen owner, int widthIn, int heightIn, int topIn, int bottomIn, int slotHeightIn) {
         super(owner, widthIn, heightIn, topIn, bottomIn, slotHeightIn);
     }

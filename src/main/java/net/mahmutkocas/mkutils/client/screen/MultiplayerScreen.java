@@ -18,8 +18,8 @@ public class MultiplayerScreen extends GuiMultiplayer {
      * */
     public MultiplayerScreen(GuiScreen parent) {
         super(parent);
-        this.mc = parent.mc;
-        parentScreen = mc.currentScreen;
+        this.mc = Minecraft.getMinecraft();
+        parentScreen = parent;
     }
 
 
