@@ -1,6 +1,7 @@
 package net.mahmutkocas.mkutils.server;
 
 import net.mahmutkocas.mkutils.server.mc.CrateCommandHandler;
+import net.mahmutkocas.mkutils.server.mc.command.CrateCommandSender;
 import net.mahmutkocas.mkutils.server.web.service.GeneralService;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -15,9 +16,12 @@ public class ServerGlobals {
 
     public static CrateCommandHandler crateCommandHandler;
 
+    public static CrateCommandSender crateCommandSender;
+
     public static void initializeGlobals(ConfigurableApplicationContext web) {
         WEB = web;
         WEBSERVICE = web.getBean(GeneralService.class);
         crateCommandHandler = new CrateCommandHandler();
+        crateCommandSender = new CrateCommandSender();
     }
 }

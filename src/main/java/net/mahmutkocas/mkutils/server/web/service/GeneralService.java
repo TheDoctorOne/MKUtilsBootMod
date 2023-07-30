@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import net.mahmutkocas.mkutils.common.dto.CrateDTO;
+import net.mahmutkocas.mkutils.server.ServerGlobals;
 import net.mahmutkocas.mkutils.server.web.dao.CrateContentDAO;
 import net.mahmutkocas.mkutils.server.web.dao.CrateDAO;
 import net.mahmutkocas.mkutils.server.web.dao.UserCrateDAO;
@@ -68,7 +69,7 @@ public class GeneralService {
     public boolean saveCrate(CrateFileDTO dto) {
         CrateDAO current = crateRepository.findByName(dto.getName()).orElse(null);
         if(current != null) {
-            return false;
+            throw new IllegalArgumentException(current.getName() + " isimli kasa bulunmakta! Kasa adini degistiriniz.");
         }
         List<CrateContentDAO> contentDAOs = CrateContentFileMapper.toDAO(dto.getContents());
         crateContentRepository.saveAll(contentDAOs);
@@ -96,6 +97,10 @@ public class GeneralService {
         }
 
         return userCrate;
+    }
+
+    public List<CrateDAO> getCrates() {
+        return crateRepository.findAll();
     }
 
     public void deleteUserCrate(String username, String crateName) {
@@ -207,7 +212,7 @@ public class GeneralService {
             }
 
             log.info("{} opened a crate {}:{}! And WON {}! Command: {}", player, userCrateDAO.getId(), userCrateDAO.getCrateDAO().getName(), current.getName(), targetCmd);
-            FMLServerHandler.instance().getServer().commandManager.executeCommand(FMLServerHandler.instance().getServer(), targetCmd);
+            FMLServerHandler.instance().getServer().commandManager.executeCommand(ServerGlobals.crateCommandSender, targetCmd);
             userCrateDAO.setClaimed(true);
         }
     }

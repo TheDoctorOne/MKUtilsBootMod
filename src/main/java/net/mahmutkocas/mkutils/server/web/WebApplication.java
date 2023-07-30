@@ -80,7 +80,7 @@ public class WebApplication {
     @Autowired
     private GeneralService generalService;
 
-    @Bean
+//    @Bean
     public void toFile() throws IOException {
         CrateContentFileDTO content = CrateContentFileDTO.builder()
                 .name("Emerald 96")
@@ -165,7 +165,7 @@ public class WebApplication {
         generalService.giveUserCrate("test", "Mix Fixed Crate");
     }
 
-    @Bean
+//    @Bean
     public void data() {
         UserDAO user = userRepository.findByUsername("test").get();
 
