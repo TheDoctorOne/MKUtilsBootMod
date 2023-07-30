@@ -98,6 +98,18 @@ public class GeneralService {
         return userCrate;
     }
 
+    public void deleteUserCrate(String username, String crateName) {
+        List<UserCrateDAO> userCrates = getUserCrates(username, true).stream()
+                .filter(userCrateDAO -> userCrateDAO.getCrateDAO().getName().equals(crateName))
+                .collect(Collectors.toList());
+
+        if(userCrates.isEmpty()) {
+            throw new IllegalArgumentException("Player: "+ username + " does not has the crate " + crateName);
+        }
+
+        userCrateRepository.delete(userCrates.get(0));
+    }
+
     public void giveUserCrate(String username, String crateName) {
         UserDAO userDAO = userRepository
                 .findByUsername(username.toLowerCase(Locale.ENGLISH)).orElse(null);

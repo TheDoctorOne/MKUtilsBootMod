@@ -2,6 +2,7 @@ package net.mahmutkocas.mkutils;
 
 import lombok.SneakyThrows;
 import net.mahmutkocas.mkutils.server.ServerGlobals;
+import net.mahmutkocas.mkutils.server.mc.CrateCommandHandler;
 import net.mahmutkocas.mkutils.server.mc.deepnetwork.NetworkSystem;
 import net.mahmutkocas.mkutils.server.web.WebApplication;
 import net.minecraft.server.MinecraftServer;
@@ -30,8 +31,8 @@ public class MKUtils
     @EventHandler
     private void serverStarting(FMLServerStartingEvent event) {
         if(event.getServer().isDedicatedServer()) {
-            ServerGlobals.setWEB(WebApplication.start(event.getServer()));
-
+            ServerGlobals.initializeGlobals(WebApplication.start(event.getServer()));
+            event.registerServerCommand(ServerGlobals.crateCommandHandler);
             logger.info("Web App Run!");
         }
     }
