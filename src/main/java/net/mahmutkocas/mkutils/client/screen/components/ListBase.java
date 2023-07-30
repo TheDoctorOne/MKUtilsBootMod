@@ -2,6 +2,7 @@ package net.mahmutkocas.mkutils.client.screen.components;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.log4j.Log4j2;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiScreen;
@@ -11,6 +12,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@Log4j2
 public abstract class ListBase<T extends GuiListExtended.IGuiListEntry> extends GuiListExtended {
 
     protected final List<T> list = new ArrayList<>();
@@ -37,7 +39,11 @@ public abstract class ListBase<T extends GuiListExtended.IGuiListEntry> extends 
         if(this.getListEntry(entryID) == null) {
             return;
         }
-        this.getListEntry(entryID).updatePosition(entryID, insideLeft, yPos, partialTicks);
+        try {
+            this.getListEntry(entryID).updatePosition(entryID, insideLeft, yPos, partialTicks);
+        } catch (Exception ex) {
+            log.error("updateItemPos", ex);
+        }
     }
 
     @Override
@@ -46,7 +52,11 @@ public abstract class ListBase<T extends GuiListExtended.IGuiListEntry> extends 
         if(this.getListEntry(slotIndex) == null) {
             return;
         }
-        this.getListEntry(slotIndex).drawEntry(slotIndex, xPos, yPos, this.getListWidth(), heightIn, mouseXIn, mouseYIn, this.isMouseYWithinSlotBounds(mouseYIn) && this.getSlotIndexFromScreenCoords(mouseXIn, mouseYIn) == slotIndex, partialTicks);
+        try {
+            this.getListEntry(slotIndex).drawEntry(slotIndex, xPos, yPos, this.getListWidth(), heightIn, mouseXIn, mouseYIn, this.isMouseYWithinSlotBounds(mouseYIn) && this.getSlotIndexFromScreenCoords(mouseXIn, mouseYIn) == slotIndex, partialTicks);
+        } catch (Exception ex) {
+            log.error("drawSlot", ex);
+        }
     }
 
 
