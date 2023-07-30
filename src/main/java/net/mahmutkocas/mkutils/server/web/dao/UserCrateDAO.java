@@ -3,6 +3,7 @@ package net.mahmutkocas.mkutils.server.web.dao;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "USER_CRATE")
@@ -22,6 +23,9 @@ public class UserCrateDAO {
     @Column(name = "CLAIMED")
     private boolean claimed;
 
+    @Column
+    private LocalDateTime claimDate;
+
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.EAGER)
@@ -31,4 +35,11 @@ public class UserCrateDAO {
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.EAGER)
     private UserDAO userDAO;
+
+    public void setClaimed(boolean claimed) {
+        if(claimed) {
+            claimDate = LocalDateTime.now();
+        }
+        this.claimed = claimed;
+    }
 }

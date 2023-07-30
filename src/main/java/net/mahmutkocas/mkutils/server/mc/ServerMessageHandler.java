@@ -33,15 +33,18 @@ public class ServerMessageHandler implements IMessageHandler<MinecraftMessage, I
         }
 
         String playerName = ctx.getServerHandler().player.getName();
-        UserDAO userDAO = ServerGlobals.WEBSERVICE.getUserByName(playerName);
-        if(userDAO == null) {
-            log.fatal("USER DOES NOT EXISTS! BUT SENDS MESSAGES? USER: {} MESSAGE: {}", playerName, message);
+        List<UserCrateDAO> userCrates;
+        List<CrateDAO> crates;
+
+        try {
+            userCrates = ServerGlobals.WEBSERVICE.getUserCrates(playerName, true);
+            crates = userCrates.stream()
+                    .map(UserCrateDAO::getCrateDAO)
+                    .collect(Collectors.toList());
+        } catch (IllegalArgumentException ex) {
+            log.fatal("USER DOES NOT EXISTS! BUT SENDS MESSAGES? USER: {} MESSAGE: {}", playerName, message, ex);
             return null;
         }
-
-        List<CrateDAO> crates = userDAO.getCrates()
-                .stream().filter(crate -> !crate.isClaimed())
-                .map(UserCrateDAO::getCrateDAO).collect(Collectors.toList());
 
         if(crates.isEmpty()) {
             log.info("Player: {}, No crate found but message is here: " + message, playerName);
@@ -54,7 +57,7 @@ public class ServerMessageHandler implements IMessageHandler<MinecraftMessage, I
                 return new MinecraftMessage(
                         MinecraftMessage.MCMessageType.CRATE_LIST, new CrateDTOList(CrateMapper.toDTO(crates)) );
             case CRATE_OPEN:
-                CrateContentDAO res = ServerGlobals.WEBSERVICE.openCrate(playerName, userDAO.getCrates(), message.getMsg(CrateDTO.class));
+                CrateContentDAO res = ServerGlobals.WEBSERVICE.openCrate(playerName, userCrates, message.getMsg(CrateDTO.class));
                 return new MinecraftMessage(MinecraftMessage.MCMessageType.CRATE_RESULT, CrateContentMapper.toDTO(res));
         }
 

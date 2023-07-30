@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -79,6 +80,24 @@ public class GeneralService {
         return true;
     }
 
+    public List<UserCrateDAO> getUserCrates(String username, boolean onlyValid) {
+        UserDAO user = userRepository.findByUsername(username).orElse(null);
+        if(user == null) {
+            log.info("User does not exists {}", username);
+            throw new IllegalArgumentException("Kullanici bulunamadi!");
+        }
+
+        List<UserCrateDAO> userCrate =  user.getCrates();
+
+        if(onlyValid) {
+            userCrate = userCrate.stream().filter(
+                    crate -> !crate.isClaimed()
+            ).collect(Collectors.toList());
+        }
+
+        return userCrate;
+    }
+
     public void giveUserCrate(String username, String crateName) {
         UserDAO userDAO = userRepository
                 .findByUsername(username.toLowerCase(Locale.ENGLISH)).orElse(null);
@@ -114,33 +133,37 @@ public class GeneralService {
             }
         }
 
-        if(crate != null) {
-            UserCrateDAO userCrateDAO = userCrateRepository.findById(crate.getId()).orElse(null);
-            if(userCrateDAO == null) {
-                log.error("User({}) crate does not exists!", player);
-                return null;
-            }
-            userCrateDAO.setClaimed(true);
-            userCrateRepository.save(userCrateDAO);
-            Set<CrateContentDAO> crateContents = userCrateDAO.getCrateDAO().getCrateContents();
-            int total = 0;
-            for(CrateContentDAO crateContent : crateContents) {
-                total += crateContent.getChance();
-            }
+        if(crate == null) {
+            return null;
+        }
 
-            int rand = random.nextInt();
-            if(rand < 0) rand *= -1;
-            rand %= total;
+        UserCrateDAO userCrateDAO = userCrateRepository.findById(crate.getId()).orElse(null);
+        if(userCrateDAO == null) {
+            log.error("User({}) crate does not exists!", player);
+            return null;
+        }
 
-            total = 0;
-            for(CrateContentDAO crateContent : crateContents) {
-                total += crateContent.getChance();
-                if(rand < total) {
-                    claimCrate(player, userCrateDAO, crateContent);
-                    return crateContent;
-                }
+        userCrateDAO.setClaimed(true);
+        userCrateRepository.save(userCrateDAO);
+        Set<CrateContentDAO> crateContents = userCrateDAO.getCrateDAO().getCrateContents();
+        int total = 0;
+        for(CrateContentDAO crateContent : crateContents) {
+            total += crateContent.getChance();
+        }
+
+        int rand = random.nextInt();
+        if(rand < 0) rand *= -1;
+        rand %= total;
+
+        total = 0;
+        for(CrateContentDAO crateContent : crateContents) {
+            total += crateContent.getChance();
+            if(rand < total) {
+                claimCrate(player, userCrateDAO, crateContent);
+                return crateContent;
             }
         }
+
         return null;
     }
 
