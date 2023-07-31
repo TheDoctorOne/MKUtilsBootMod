@@ -11,6 +11,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -74,39 +75,6 @@ public class CrateCommandHandler extends CommandBaseExtended {
         }
     }
 
-    private ITextComponent buildHelp() {
-        ITextComponent sb = new TextComponentString("" +
-                "============\n" +
-                "Crate Commands\n" +
-                "============\n");
-        sb.getStyle().setBold(true).setColor(TextFormatting.RED);
-
-        for(Command command : commands) {
-            String desc = command.getDesc();
-            sb.appendSibling(command.getCmdHelp());
-
-            ITextComponent cmd = new TextComponentString("- " + desc + "\n");
-            cmd.getStyle().setBold(false).setColor(TextFormatting.WHITE);
-            sb.appendSibling(cmd);
-        }
-
-        return sb;
-    }
-
-    private String buildHelpStr() {
-        StringBuilder sb = new StringBuilder(512);
-
-        sb.append("Crate Commands\n");
-
-        for(Command cmd : commands) {
-            String desc = cmd.getDesc();
-
-            sb.append(cmd.getCmdHelpStr());
-            sb.append("- ").append(desc).append("\n");
-        }
-
-        return sb.toString();
-    }
 
     private List<String> buildPlayer(MinecraftServer server, String playerInput) {
         boolean isAll = playerInput.trim().equals("@a");
