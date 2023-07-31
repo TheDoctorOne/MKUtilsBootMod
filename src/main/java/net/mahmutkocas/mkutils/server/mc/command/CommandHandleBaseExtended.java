@@ -63,7 +63,7 @@ public abstract class CommandHandleBaseExtended extends CommandBase {
         }
 
         if(args.length < command.getMinArgLen()) {
-            sender.sendMessage(command.getCmdHelp());
+            sender.sendMessage(command.getCmdHelp(getName()));
             return;
         }
 
@@ -95,7 +95,7 @@ public abstract class CommandHandleBaseExtended extends CommandBase {
             }
 
             String desc = command.getDesc();
-            sb.appendSibling(command.getCmdHelp());
+            sb.appendSibling(command.getCmdHelp(getName()));
 
             ITextComponent cmd = new TextComponentString("- " + desc + "\n");
             cmd.getStyle().setBold(false).setColor(TextFormatting.WHITE);
@@ -118,7 +118,7 @@ public abstract class CommandHandleBaseExtended extends CommandBase {
 
             String desc = command.getDesc();
 
-            sb.append(command.getCmdHelpStr());
+            sb.append(command.getCmdHelpStr(getName()));
             sb.append("- ").append(desc).append("\n");
         }
 

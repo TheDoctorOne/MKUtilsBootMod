@@ -12,7 +12,7 @@ public class UserMapper {
         return UserDAO.builder()
                 .username(userDTO.getUsername().toLowerCase(Locale.ENGLISH))
                 .password(DigestUtils.sha256Hex(userDTO.getPassword()))
-                .mail(userDTO.getMail())
+                .discord(userDTO.getDiscord())
                 .build();
     }
 

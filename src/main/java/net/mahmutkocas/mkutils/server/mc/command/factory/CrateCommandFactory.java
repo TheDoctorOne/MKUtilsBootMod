@@ -192,7 +192,7 @@ public class CrateCommandFactory extends BaseCommandFactory {
 
             UserCrateDAO userCrate = userCrates.get(i);
             String msg = (i+1) + ". " + userCrate.getCrateDAO().getName();
-            String claimDate = userCrate.getClaimDate() != null ? DateTimeFormatter.BASIC_ISO_DATE.format(userCrate.getClaimDate()) : "";
+            String claimDate = userCrate.getClaimDate() != null ? DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(userCrate.getClaimDate()) : "";
             if(all) {
                 msg += (userCrate.isClaimed()
                         ? (" Kullanildi " + claimDate)

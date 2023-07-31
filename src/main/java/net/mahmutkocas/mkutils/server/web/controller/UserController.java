@@ -1,6 +1,7 @@
 package net.mahmutkocas.mkutils.server.web.controller;
 
 import lombok.RequiredArgsConstructor;
+import net.mahmutkocas.mkutils.common.dto.RegisterResponseDTO;
 import net.mahmutkocas.mkutils.common.dto.TokenDTO;
 import net.mahmutkocas.mkutils.common.dto.UserDTO;
 import net.mahmutkocas.mkutils.common.dto.UserLoginDTO;
@@ -21,12 +22,13 @@ public class UserController {
     private final GeneralService service;
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<RegisterResponseDTO> register(@RequestBody UserDTO userDTO) {
         boolean success = service.register(UserMapper.toDAO(userDTO));
-        return success ?
-                new ResponseEntity<>("Register successful!", HttpStatus.ACCEPTED)
-                :
-                new ResponseEntity<>("User exists!", HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(
+                new RegisterResponseDTO(success),
+                success
+                        ? HttpStatus.ACCEPTED
+                        : HttpStatus.UNAUTHORIZED);
     }
 
     @PostMapping("/login")

@@ -19,6 +19,6 @@ public class UserCommandHandler extends CommandHandleBaseExtended {
 
     @Override
     public String getName() {
-        return null;
+        return "user";
     }
 }
