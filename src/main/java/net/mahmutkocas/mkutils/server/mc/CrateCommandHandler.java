@@ -20,28 +20,16 @@ import java.util.stream.Collectors;
 public class CrateCommandHandler extends CommandBaseExtended {
 
     private List<Command> commands = CrateCommandFactory.getCommands();
-    private String help = buildHelpStr();
-    private ITextComponent helpMessage = buildHelp();
-
 
     @Override
     public String getName() {
         return "crate";
     }
 
-    @Override
-    public String getUsage(ICommandSender sender) {
-        return help;
-    }
 
     @Override
     public List<Command> getCommands() {
         return commands;
-    }
-
-    @Override
-    public ITextComponent getHelpMessage() {
-        return helpMessage;
     }
 
     @Override
