@@ -1,22 +1,26 @@
 package net.mahmutkocas.mkutils.server.mc;
 
+import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
 import net.mahmutkocas.mkutils.server.mc.command.Command;
-import net.mahmutkocas.mkutils.server.mc.command.CommandFactory;
+import net.mahmutkocas.mkutils.server.mc.command.CommandBaseExtended;
+import net.mahmutkocas.mkutils.server.mc.command.CrateCommandFactory;
 import net.minecraft.command.CommandBase;
-import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class CrateCommandHandler extends CommandBase {
+@Log4j2
+public class CrateCommandHandler extends CommandBaseExtended {
 
-
-    private List<Command> commands = CommandFactory.getCommands();
-
-    private String help = buildHelp();
+    private List<Command> commands = CrateCommandFactory.getCommands();
+    private String help = buildHelpStr();
+    private ITextComponent helpMessage = buildHelp();
 
 
     @Override
@@ -30,78 +34,75 @@ public class CrateCommandHandler extends CommandBase {
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
-         boolean isOp = sender.canUseCommand(getRequiredPermissionLevel(), this.getName());
-         if(!isOp) {
-             return;
-         }
-         if(args.length == 0) {
-             sender.sendMessage(new TextComponentString(getUsage(sender)));
-             return;
-         }
-
-         List<Command> filtered = commands.stream()
-                 .filter(command -> command.getCommands()[0].equals(args[0])).
-                 collect(Collectors.toList());
-
-         if(filtered.isEmpty()) {
-             sender.sendMessage(new TextComponentString(help));
-             return;
-         }
-
-         filtered.forEach(command -> {
-             if(command.getMinArgLen() == 0) {
-                 command.getOnCommand().execute(server, sender, args);
-                 return;
-             }
-             if(args.length < command.getMinArgLen()) {
-                 sender.sendMessage(new TextComponentString(command.getHelp()));
-                 return;
-             }
-             List<String> players = new ArrayList<>();
-
-             String[] cmds = command.getCommands();
-             int playerNameIndex = -1;
-             int crateNameIndex = -1;
-             for(int i=1; i<cmds.length;i++) {
-                 String cmd = cmds[i];
-                 if(cmd.equals("crateName")) {
-                     crateNameIndex = i;
-                 }
-                 if(cmd.equals("playerName")) {
-                     players.addAll(buildPlayer(server, args[i]));
-                     playerNameIndex = i;
-                 }
-             }
-
-             String[] subArgs = handleCrateName(args, crateNameIndex);
-
-             if(players.isEmpty()) {
-                 command.getOnCommand().execute(server, sender, subArgs);
-                 return;
-             }
-
-             for(String player : players) {
-                 subArgs[playerNameIndex-1] = player;
-                 command.getOnCommand().execute(server, sender, subArgs);
-             }
-
-         });
+    public List<Command> getCommands() {
+        return commands;
     }
 
-    private String buildHelp() {
+    @Override
+    public ITextComponent getHelpMessage() {
+        return helpMessage;
+    }
+
+    @Override
+    public void processCommand(Command command, MinecraftServer server, ICommandSender sender, String[] args) {
+        List<String> players = new ArrayList<>();
+
+        String[] cmds = command.getCommands();
+        int playerNameIndex = -1;
+        int crateNameIndex = -1;
+        for(int i=1; i<cmds.length;i++) {
+            String cmd = cmds[i];
+            if(cmd.equals("crateName")) {
+                crateNameIndex = i;
+            }
+            if(cmd.equals("playerName")) {
+                players.addAll(buildPlayer(server, args[i]));
+                playerNameIndex = i;
+            }
+        }
+
+        String[] subArgs = handleCrateName(args, crateNameIndex);
+
+        if(players.isEmpty()) {
+            command.getOnCommand().execute(server, sender, subArgs);
+            return;
+        }
+
+        for(String player : players) {
+            subArgs[playerNameIndex-1] = player;
+            command.getOnCommand().execute(server, sender, subArgs);
+        }
+    }
+
+    private ITextComponent buildHelp() {
+        ITextComponent sb = new TextComponentString("" +
+                "============\n" +
+                "Crate Commands\n" +
+                "============\n");
+        sb.getStyle().setBold(true).setColor(TextFormatting.RED);
+
+        for(Command command : commands) {
+            String desc = command.getDesc();
+            sb.appendSibling(command.getCmdHelp());
+
+            ITextComponent cmd = new TextComponentString("- " + desc + "\n");
+            cmd.getStyle().setBold(false).setColor(TextFormatting.WHITE);
+            sb.appendSibling(cmd);
+        }
+
+        return sb;
+    }
+
+    private String buildHelpStr() {
         StringBuilder sb = new StringBuilder(512);
 
         sb.append("Crate Commands\n");
 
         for(Command cmd : commands) {
-            String help = cmd.getHelp();
-            String[] cmds = cmd.getCommands();
-            sb.append("/crate ");
-            for(int i=0; i<cmds.length;i++) {
-                sb.append(cmds[i]).append(" ");
-            }
-            sb.append("- ").append(help).append("\n");
+            String desc = cmd.getDesc();
+
+            sb.append(cmd.getCmdHelpStr());
+            sb.append("- ").append(desc).append("\n");
         }
 
         return sb.toString();
