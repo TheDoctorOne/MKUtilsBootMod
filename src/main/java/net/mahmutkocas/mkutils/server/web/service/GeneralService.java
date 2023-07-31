@@ -234,16 +234,19 @@ public class GeneralService {
     }
 
     public TokenDTO login(UserDAO req) {
-        if(req.getUsername().isEmpty() || req.getUsername().length() > 16 || req.getPassword().isEmpty() || req.getUsername().contains(";")) {
+        if(req.getUsername().isEmpty()
+                || req.getUsername().length() > 16
+                || req.getPassword().isEmpty()
+                || req.getUsername().contains(";")
+        ) {
             return null;
         }
 
-        Optional<UserDAO> oUserDAO = userRepository.findByUsername(req.getUsername());
-        if(!oUserDAO.isPresent()) {
-            oUserDAO = Optional.of(userRepository.save(req));
+        UserDAO userDAO = userRepository.findByUsername(req.getUsername()).orElse(null);
+        if(userDAO == null) {
+            return null;
         }
 
-        UserDAO userDAO = oUserDAO.get();
         if(!userDAO.getPassword().equals(req.getPassword())) {
             return null;
         }
@@ -256,7 +259,12 @@ public class GeneralService {
     }
 
     public boolean register(UserDAO req) {
-        if(req.getUsername().isEmpty() || req.getUsername().length() > 16 || req.getPassword().isEmpty() || req.getUsername().contains(";")) {
+        if(req.getUsername().isEmpty()
+                || req.getUsername().length() > 16
+                || req.getPassword().isEmpty()
+                || req.getUsername().contains(";")
+                || req.getDiscord().isEmpty()
+                || req.getDiscord().length() > 128) {
             return false;
         }
 
