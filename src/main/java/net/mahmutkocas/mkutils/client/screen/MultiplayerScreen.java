@@ -26,7 +26,8 @@ public class MultiplayerScreen extends GuiMultiplayer {
     @Override
     public void createButtons() {
         super.createButtons();
-        this.buttonList.add(new GuiButton(99, 5, 5, 100, 20, "Giriş Yap"));
+        this.buttonList.add(new GuiButton(99, 5, 5, 100, 20, "Kayıt Ol"));
+        this.buttonList.add(new GuiButton(100, width-105, 5, 100, 20, "Giriş Yap"));
     }
 
     @Override
@@ -37,6 +38,8 @@ public class MultiplayerScreen extends GuiMultiplayer {
         else if (button.id == 8) {
             this.mc.displayGuiScreen(new MultiplayerScreen(parentScreen));
         } else if(button.id == 99) {
+            this.mc.displayGuiScreen(ScreenProvider.INSTANCE.getRegisterScreen().parent(this));
+        } else if(button.id == 100) {
             this.mc.displayGuiScreen(ScreenProvider.INSTANCE.getLoginScreen().parent(this).username(ClientGlobals.getClientConfig().getUsername()));
         } else {
             super.actionPerformed(button);
