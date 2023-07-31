@@ -11,6 +11,9 @@ public class EventHandle {
 
     @SideOnly(Side.CLIENT)
     private static void clientRegister() {
+        MinecraftForge.EVENT_BUS.register(new ScreenEvents(Minecraft.getMinecraft()));
+        MinecraftForge.EVENT_BUS.register(new ClientUserEvents());
+        AppGlobals.NETWORK.registerMessage(ClientMessageHandler.class, MinecraftMessage.class, 0, Side.CLIENT);
     }
 
     @SideOnly(Side.SERVER)

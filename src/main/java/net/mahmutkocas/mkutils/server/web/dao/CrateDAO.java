@@ -17,7 +17,7 @@ public class CrateDAO {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    @Column(name = "ID",updatable = false, nullable = false)
+    @Column(name = "ID")
     private Long id;
 
     @Column(name = "NAME")
@@ -26,7 +26,12 @@ public class CrateDAO {
     @Column(name = "IMAGE_URL")
     private String imageUrl;
 
-    @ManyToMany
+    @Column(name = "COLOR")
+    private Integer color;
+
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "create_contents",
             joinColumns = @JoinColumn(name = "crate_id"),
@@ -34,6 +39,8 @@ public class CrateDAO {
     )
     private Set<CrateContentDAO> crateContents;
 
-    @OneToMany
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @OneToMany(fetch = FetchType.EAGER)
     private Set<UserCrateDAO> userCrates;
 }

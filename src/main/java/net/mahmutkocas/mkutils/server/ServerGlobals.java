@@ -1,6 +1,8 @@
 package net.mahmutkocas.mkutils.server;
 
-import net.mahmutkocas.mkutils.server.web.service.UserService;
+import net.mahmutkocas.mkutils.server.mc.CrateCommandHandler;
+import net.mahmutkocas.mkutils.server.mc.command.CrateCommandSender;
+import net.mahmutkocas.mkutils.server.web.service.GeneralService;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -10,10 +12,16 @@ public class ServerGlobals {
 
     public static ConfigurableApplicationContext WEB;
 
-    public static UserService USER_SERVICE;
+    public static GeneralService WEBSERVICE;
 
-    public static void setWEB(ConfigurableApplicationContext web) {
+    public static CrateCommandHandler crateCommandHandler;
+
+    public static CrateCommandSender crateCommandSender;
+
+    public static void initializeGlobals(ConfigurableApplicationContext web) {
         WEB = web;
-        USER_SERVICE = web.getBean(UserService.class);
+        WEBSERVICE = web.getBean(GeneralService.class);
+        crateCommandHandler = new CrateCommandHandler();
+        crateCommandSender = new CrateCommandSender();
     }
 }

@@ -17,6 +17,7 @@ public class CrateContentMapper {
         return CrateContentDTO.builder()
                 .name(dao.getName())
                 .imageUrl(dao.getImageUrl())
+                .color(dao.getColor())
                 .chance(dao.getChance())
                 .build();
     }

@@ -49,12 +49,26 @@ public class MKUtils
                 updateNetworkServer(serverHandler.getServer());
             }
         }
+        
+        if(AppGlobals.SIDE.isClient()) {
+            ClientGlobals.runUserClient();
+            ClientGlobals.readConfig();
+            logger.info("User client started!");
+        }
     }
 
     @EventHandler
     public void init(FMLInitializationEvent event)
     {
         EventHandle.register();
+    }
+    
+
+    @EventHandler
+    public void postInit(FMLPostInitializationEvent event) {
+        if(AppGlobals.SIDE.isClient()) {
+        	ScreenProvider.initialize(Minecraft.getMinecraft());
+        }
     }
 
     @EventHandler

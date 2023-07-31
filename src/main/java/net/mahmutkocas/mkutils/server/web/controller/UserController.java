@@ -5,7 +5,7 @@ import net.mahmutkocas.mkutils.common.dto.TokenDTO;
 import net.mahmutkocas.mkutils.common.dto.UserDTO;
 import net.mahmutkocas.mkutils.common.dto.UserLoginDTO;
 import net.mahmutkocas.mkutils.server.web.mapper.UserMapper;
-import net.mahmutkocas.mkutils.server.web.service.UserService;
+import net.mahmutkocas.mkutils.server.web.service.GeneralService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserService service;
+    private final GeneralService service;
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody UserDTO userDTO) {

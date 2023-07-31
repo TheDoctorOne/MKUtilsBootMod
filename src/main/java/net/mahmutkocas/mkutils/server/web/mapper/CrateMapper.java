@@ -14,11 +14,16 @@ public class CrateMapper {
                 .id(dao.getId())
                 .name(dao.getName())
                 .imageUrl(dao.getImageUrl())
+                .color(dao.getColor())
                 .contents(CrateContentMapper.toDTO(dao.getCrateContents()))
                 .build();
     }
 
     public static List<CrateDTO> toDTO(Set<CrateDAO> daoSet) {
+        return daoSet.stream().map(CrateMapper::toDTO).collect(Collectors.toList());
+    }
+
+    public static List<CrateDTO> toDTO(List<CrateDAO> daoSet) {
         return daoSet.stream().map(CrateMapper::toDTO).collect(Collectors.toList());
     }
 
