@@ -18,6 +18,8 @@ public class Command {
     private final String[] commands;
     private final int minArgLen; // does contain the command itself. Minimum args required.
     private final RunnableCommand onCommand;
+    @Builder.Default
+    private int permLevel = 4; // 4 means OP
 
     public String getCmdHelpStr() {
         if(cmdHelpStr == null) {

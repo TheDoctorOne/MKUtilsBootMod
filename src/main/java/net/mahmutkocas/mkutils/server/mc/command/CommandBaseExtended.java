@@ -59,15 +59,13 @@ public abstract class CommandBaseExtended extends CommandBase {
 
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
-        boolean isOp = sender.canUseCommand(getRequiredPermissionLevel(), this.getName());
-        if(!isOp) {
-            log.info("{} tried to use crate command, args: {}", sender.getName(), Arrays.toString(args));
-            return;
-        }
+        log.info("{} tried to use command, args: {}", sender.getName(), Arrays.toString(args));
+
         if(args.length == 0) {
             sender.sendMessage(getHelpMessage());
             return;
         }
+        log.info("{} using command, args: {}", sender.getName(), Arrays.toString(args));
 
         List<Command> filtered = getCommands().stream()
                 .filter(command -> command.getCommands()[0].equals(args[0])).
@@ -78,10 +76,16 @@ public abstract class CommandBaseExtended extends CommandBase {
             return;
         }
 
-        filtered.forEach(command -> preProcessCommand(command, server, sender, args));
+        filtered.forEach(command -> checkAndProcess(command, server, sender, args));
     }
 
-    protected void preProcessCommand(Command command, MinecraftServer server, ICommandSender sender, String[] args) {
+    protected void checkAndProcess(Command command, MinecraftServer server, ICommandSender sender, String[] args) {
+        boolean canUse = sender.canUseCommand(command.getPermLevel(), this.getName());
+        if(!canUse) {
+            log.error("{} failed to use command, args: {}", sender.getName(), Arrays.toString(args));
+            sender.sendMessage(getNoPermMsg());
+            return;
+        }
         if(command.getMinArgLen() == 0) {
             command.getOnCommand().execute(server, sender, args);
             return;
@@ -93,4 +97,10 @@ public abstract class CommandBaseExtended extends CommandBase {
         processCommand(command, server, sender, args);
     }
 
+
+    protected ITextComponent getNoPermMsg() {
+        ITextComponent textComponent = new TextComponentString("Yetkiniz bulunmamaktadır.");
+        textComponent.getStyle().setBold(true).setColor(TextFormatting.RED);
+        return textComponent;
+    }
 }
