@@ -228,6 +228,7 @@ public class GeneralService {
             throw new IllegalArgumentException(name + " isimli kullanici bulunamadi.");
         }
         user.setPassword("");
+        user.setTokenExpDate(LocalDateTime.now());
         userRepository.save(user);
         log.info("{} cleared the password of {}", requester, user.getUsername());
     }

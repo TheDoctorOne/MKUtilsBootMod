@@ -8,7 +8,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 
-@Builder
 @AllArgsConstructor
 @Getter
 public class Command {
@@ -20,6 +19,14 @@ public class Command {
     private final RunnableCommand onCommand;
     @Builder.Default
     private int permLevel = 4; // 4 means OP
+
+    @Builder
+    public Command(String desc, String[] commands, int minArgLen, RunnableCommand onCommand) {
+        this.desc = desc;
+        this.commands = commands;
+        this.minArgLen = minArgLen;
+        this.onCommand = onCommand;
+    }
 
     public String getCmdHelpStr() {
         if(cmdHelpStr == null) {

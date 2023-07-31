@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Log4j2
-public abstract class CommandBaseExtended extends CommandBase {
+public abstract class CommandHandleBaseExtended extends CommandBase {
 
     public abstract List<Command> getCommands();
 

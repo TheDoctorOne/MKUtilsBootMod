@@ -1,8 +1,9 @@
-package net.mahmutkocas.mkutils.server.mc.command;
+package net.mahmutkocas.mkutils.server.mc.command.factory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.log4j.Log4j2;
 import net.mahmutkocas.mkutils.server.ServerGlobals;
+import net.mahmutkocas.mkutils.server.mc.command.Command;
 import net.mahmutkocas.mkutils.server.web.dao.CrateDAO;
 import net.mahmutkocas.mkutils.server.web.dao.UserCrateDAO;
 import net.mahmutkocas.mkutils.server.web.dto.file.CrateFileDTO;
@@ -19,16 +20,12 @@ import java.util.Collections;
 import java.util.List;
 
 @Log4j2
-public class CrateCommandFactory {
+public class CrateCommandFactory extends BaseCommandFactory {
 
     private final static List<Command> COMMANDS = new ArrayList<>();
     private static boolean isInit = false;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
-
-    private CrateCommandFactory() {
-        initCommands();
-    }
 
     public static List<Command> getCommands() {
         if(!isInit) {
@@ -37,7 +34,9 @@ public class CrateCommandFactory {
         return Collections.unmodifiableList(COMMANDS);
     }
 
-    private void initCommands() {
+    @Override
+    protected void initCommands() {
+        COMMANDS.clear();
         invSeeCommand();
         giveCrate();
         delCrate();

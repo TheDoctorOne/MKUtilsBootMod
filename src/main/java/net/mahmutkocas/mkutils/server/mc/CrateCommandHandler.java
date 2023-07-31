@@ -1,23 +1,17 @@
 package net.mahmutkocas.mkutils.server.mc;
 
-import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import net.mahmutkocas.mkutils.server.mc.command.Command;
-import net.mahmutkocas.mkutils.server.mc.command.CommandBaseExtended;
-import net.mahmutkocas.mkutils.server.mc.command.CrateCommandFactory;
-import net.minecraft.command.CommandBase;
+import net.mahmutkocas.mkutils.server.mc.command.CommandHandleBaseExtended;
+import net.mahmutkocas.mkutils.server.mc.command.factory.CrateCommandFactory;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextFormatting;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Log4j2
-public class CrateCommandHandler extends CommandBaseExtended {
+public class CrateCommandHandler extends CommandHandleBaseExtended {
 
     private List<Command> commands = CrateCommandFactory.getCommands();
 
