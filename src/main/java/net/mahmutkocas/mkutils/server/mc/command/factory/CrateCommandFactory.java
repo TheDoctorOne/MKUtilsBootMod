@@ -1,8 +1,9 @@
-package net.mahmutkocas.mkutils.server.mc.command;
+package net.mahmutkocas.mkutils.server.mc.command.factory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.log4j.Log4j2;
 import net.mahmutkocas.mkutils.server.ServerGlobals;
+import net.mahmutkocas.mkutils.server.mc.command.Command;
 import net.mahmutkocas.mkutils.server.web.dao.CrateDAO;
 import net.mahmutkocas.mkutils.server.web.dao.UserCrateDAO;
 import net.mahmutkocas.mkutils.server.web.dto.file.CrateFileDTO;
@@ -10,36 +11,32 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
-import scala.Int;
 
 import java.io.File;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 @Log4j2
-public class CommandFactory {
+public class CrateCommandFactory extends BaseCommandFactory {
 
     private final static List<Command> COMMANDS = new ArrayList<>();
     private static boolean isInit = false;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    private CommandFactory() {
-        initCommands();
-    }
-
     public static List<Command> getCommands() {
         if(!isInit) {
-            new CommandFactory();
+            new CrateCommandFactory();
         }
         return Collections.unmodifiableList(COMMANDS);
     }
 
-    private void initCommands() {
+    @Override
+    protected void initCommands() {
+        COMMANDS.clear();
         invSeeCommand();
         giveCrate();
         delCrate();
@@ -51,7 +48,7 @@ public class CommandFactory {
     private void importCrate() {
         int minLen = 2;
         Command impCrate = Command.builder()
-                .help("Dosyadan kasayi oyuna aktar. Dosyayi sunucu klasorune koy ve dosya adini(UZANTISIZ) yaz. DOSYA ADI BOSLUKSUZ ve UZANTISI 'json' OLMALI!")
+                .desc("Dosyadan kasayi oyuna aktar. Dosyayi sunucu klasorune koy ve dosya adini(UZANTISIZ) yaz. DOSYA ADI BOSLUKSUZ ve UZANTISI 'json' OLMALI!")
                 .commands(new String[]{"import", "fileName"})
                 .minArgLen(minLen)
                 .onCommand((server, sender, args) -> {
@@ -68,7 +65,7 @@ public class CommandFactory {
     private void listPossibleCrates() {
         int minLen = 2;
         Command listPossibleCrates = Command.builder()
-                .help("Olusturulmus kasa isimlerini döner")
+                .desc("Olusturulmus kasa isimlerini döner")
                 .commands(new String[]{"list","page"})
                 .minArgLen(minLen)
                 .onCommand((server, sender, args) -> {
@@ -89,7 +86,7 @@ public class CommandFactory {
     private void delCrate() {
         int minLen = 3;
         Command delCrate = Command.builder()
-                .help("Oyuncunun kasasini sil. 'playerName' kısmını @a girilerek serverda online olan herkesten sil!")
+                .desc("Oyuncunun kasasini sil. 'playerName' kısmını @a girilerek serverda online olan herkesten sil!")
                 .commands(new String[]{"remove", "playerName", "crateName"})
                 .minArgLen(minLen)
                 .onCommand((server, sender, args) -> {
@@ -105,7 +102,7 @@ public class CommandFactory {
     private void giveCrate() {
         int minLen = 3;
         Command giveCrate = Command.builder()
-                .help("Oyunucuya kasa ver. 'playerName' kısmını @a girilerek serverda online olan herkese kasa ver!")
+                .desc("Oyunucuya kasa ver. 'playerName' kısmını @a girilerek serverda online olan herkese kasa ver!")
                 .commands(new String[]{"give", "playerName", "crateName"})
                 .minArgLen(minLen)
                 .onCommand((server, sender, args) -> {
@@ -122,7 +119,7 @@ public class CommandFactory {
     private void invSeeCommand() {
         int minLen = 3;
         Command invSee = Command.builder()
-                .help("Oyuncularin kasalarini gör. Eger 'showAll' eklenirse, kullanicinin eski kasalari da gosterilir.")
+                .desc("Oyuncularin kasalarini gör. Eger 'showAll' eklenirse, kullanicinin eski kasalari da gosterilir.")
                 .commands(new String[]{"see", "playerName", "page", "showAll"})
                 .minArgLen(minLen)
                 .onCommand((server, sender, args) -> {

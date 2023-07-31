@@ -33,6 +33,7 @@ public class MKUtils
         if(event.getServer().isDedicatedServer()) {
             ServerGlobals.initializeGlobals(WebApplication.start(event.getServer()));
             event.registerServerCommand(ServerGlobals.crateCommandHandler);
+            event.registerServerCommand(ServerGlobals.userCommandHandler);
             logger.info("Web App Run!");
         }
     }

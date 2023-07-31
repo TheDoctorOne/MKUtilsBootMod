@@ -27,8 +27,8 @@ public class UserDAO {
     @Column(name = "PASSWORD")
     private String password;
 
-    @Column(name = "MAIL")
-    private String mail;
+    @Column(name = "DISCORD")
+    private String discord;
 
     @Column(name = "TOKEN")
     private String token;

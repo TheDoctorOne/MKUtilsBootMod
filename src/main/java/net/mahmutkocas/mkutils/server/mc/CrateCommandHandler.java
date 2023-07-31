@@ -1,111 +1,62 @@
 package net.mahmutkocas.mkutils.server.mc;
 
+import lombok.extern.log4j.Log4j2;
 import net.mahmutkocas.mkutils.server.mc.command.Command;
-import net.mahmutkocas.mkutils.server.mc.command.CommandFactory;
-import net.minecraft.command.CommandBase;
-import net.minecraft.command.CommandException;
+import net.mahmutkocas.mkutils.server.mc.command.CommandHandleBaseExtended;
+import net.mahmutkocas.mkutils.server.mc.command.factory.CrateCommandFactory;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.text.TextComponentString;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class CrateCommandHandler extends CommandBase {
+@Log4j2
+public class CrateCommandHandler extends CommandHandleBaseExtended {
 
-
-    private List<Command> commands = CommandFactory.getCommands();
-
-    private String help = buildHelp();
-
+    private List<Command> commands = CrateCommandFactory.getCommands();
 
     @Override
     public String getName() {
         return "crate";
     }
 
+
     @Override
-    public String getUsage(ICommandSender sender) {
-        return help;
+    public List<Command> getCommands() {
+        return commands;
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
-         boolean isOp = sender.canUseCommand(getRequiredPermissionLevel(), this.getName());
-         if(!isOp) {
-             return;
-         }
-         if(args.length == 0) {
-             sender.sendMessage(new TextComponentString(getUsage(sender)));
-             return;
-         }
+    public void processCommand(Command command, MinecraftServer server, ICommandSender sender, String[] args) {
+        List<String> players = new ArrayList<>();
 
-         List<Command> filtered = commands.stream()
-                 .filter(command -> command.getCommands()[0].equals(args[0])).
-                 collect(Collectors.toList());
-
-         if(filtered.isEmpty()) {
-             sender.sendMessage(new TextComponentString(help));
-             return;
-         }
-
-         filtered.forEach(command -> {
-             if(command.getMinArgLen() == 0) {
-                 command.getOnCommand().execute(server, sender, args);
-                 return;
-             }
-             if(args.length < command.getMinArgLen()) {
-                 sender.sendMessage(new TextComponentString(command.getHelp()));
-                 return;
-             }
-             List<String> players = new ArrayList<>();
-
-             String[] cmds = command.getCommands();
-             int playerNameIndex = -1;
-             int crateNameIndex = -1;
-             for(int i=1; i<cmds.length;i++) {
-                 String cmd = cmds[i];
-                 if(cmd.equals("crateName")) {
-                     crateNameIndex = i;
-                 }
-                 if(cmd.equals("playerName")) {
-                     players.addAll(buildPlayer(server, args[i]));
-                     playerNameIndex = i;
-                 }
-             }
-
-             String[] subArgs = handleCrateName(args, crateNameIndex);
-
-             if(players.isEmpty()) {
-                 command.getOnCommand().execute(server, sender, subArgs);
-                 return;
-             }
-
-             for(String player : players) {
-                 subArgs[playerNameIndex-1] = player;
-                 command.getOnCommand().execute(server, sender, subArgs);
-             }
-
-         });
-    }
-
-    private String buildHelp() {
-        StringBuilder sb = new StringBuilder(512);
-
-        sb.append("Crate Commands\n");
-
-        for(Command cmd : commands) {
-            String help = cmd.getHelp();
-            String[] cmds = cmd.getCommands();
-            sb.append("/crate ");
-            for(int i=0; i<cmds.length;i++) {
-                sb.append(cmds[i]).append(" ");
+        String[] cmds = command.getCommands();
+        int playerNameIndex = -1;
+        int crateNameIndex = -1;
+        for(int i=1; i<cmds.length;i++) {
+            String cmd = cmds[i];
+            if(cmd.equals("crateName")) {
+                crateNameIndex = i;
             }
-            sb.append("- ").append(help).append("\n");
+            if(cmd.equals("playerName")) {
+                players.addAll(buildPlayer(server, args[i]));
+                playerNameIndex = i;
+            }
         }
 
-        return sb.toString();
+        String[] subArgs = handleCrateName(args, crateNameIndex);
+
+        if(players.isEmpty()) {
+            command.getOnCommand().execute(server, sender, subArgs);
+            return;
+        }
+
+        for(String player : players) {
+            subArgs[playerNameIndex-1] = player;
+            command.getOnCommand().execute(server, sender, subArgs);
+        }
     }
+
 
     private List<String> buildPlayer(MinecraftServer server, String playerInput) {
         boolean isAll = playerInput.trim().equals("@a");

@@ -221,6 +221,18 @@ public class GeneralService {
         return userRepository.findByUsername(name.toLowerCase(Locale.ENGLISH)).orElse(null);
     }
 
+    public void clearUserPassword(String requester, String name) {
+        log.info("{} requested to clear password of {}", requester, name);
+        UserDAO user = getUserByName(name);
+        if(user == null) {
+            throw new IllegalArgumentException(name + " isimli kullanici bulunamadi.");
+        }
+        user.setPassword("");
+        user.setTokenExpDate(LocalDateTime.now());
+        userRepository.save(user);
+        log.info("{} cleared the password of {}", requester, user.getUsername());
+    }
+
     public TokenDTO login(UserDAO req) {
         if(req.getUsername().isEmpty() || req.getUsername().length() > 16 || req.getPassword().isEmpty() || req.getUsername().contains(";")) {
             return null;
@@ -248,12 +260,17 @@ public class GeneralService {
             return false;
         }
 
-        Optional<UserDAO> oUserDAO = userRepository.findByUsername(req.getUsername());
-        if(oUserDAO.isPresent()) {
+        UserDAO user = userRepository.findByUsername(req.getUsername()).orElse(null);
+        if(user != null && !user.getPassword().isEmpty()) {
             return false;
         }
 
-        userRepository.save(req);
+        if(user == null) {
+            userRepository.save(req);
+        } else {
+            user.setPassword(req.getPassword());
+            userRepository.save(user);
+        }
 
         return true;
     }
