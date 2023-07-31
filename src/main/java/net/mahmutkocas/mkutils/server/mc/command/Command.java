@@ -1,6 +1,7 @@
 package net.mahmutkocas.mkutils.server.mc.command;
 
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,8 +13,12 @@ import net.minecraft.util.text.TextFormatting;
 @Getter
 public class Command {
     private final String desc;
+
+    @Getter(AccessLevel.NONE)
     private String cmdHelpStr;
+    @Getter(AccessLevel.NONE)
     private ITextComponent cmdHelp;
+
     private final String[] commands;
     private final int minArgLen; // does contain the command itself. Minimum args required.
     private final RunnableCommand onCommand;
@@ -28,11 +33,11 @@ public class Command {
         this.onCommand = onCommand;
     }
 
-    public String getCmdHelpStr() {
+    public String getCmdHelpStr(String name) {
         if(cmdHelpStr == null) {
             String[] cmds = getCommands();
             StringBuilder sb = new StringBuilder(64);
-            sb.append("- /crate ");
+            sb.append("- /").append(name).append(" ");
             for(int i=0; i<cmds.length;i++) {
                 sb.append(cmds[i]).append(" ");
             }
@@ -41,9 +46,9 @@ public class Command {
         return cmdHelpStr;
     }
 
-    public ITextComponent getCmdHelp() {
+    public ITextComponent getCmdHelp(String name) {
         if(cmdHelp == null) {
-            cmdHelp = new TextComponentString(getCmdHelpStr());
+            cmdHelp = new TextComponentString(getCmdHelpStr(name));
             cmdHelp.getStyle().setBold(true).setColor(TextFormatting.AQUA);
         }
         return cmdHelp;

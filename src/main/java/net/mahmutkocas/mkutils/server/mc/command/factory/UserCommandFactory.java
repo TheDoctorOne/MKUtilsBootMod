@@ -36,7 +36,7 @@ public class UserCommandFactory extends BaseCommandFactory {
     }
 
     private void info() {
-        int minLen = 3;
+        int minLen = 2;
         Command info = Command.builder()
                 .desc("Oyuncunun bilgilerini getirir")
                 .commands(new String[]{"info", "playerName"})
@@ -45,7 +45,7 @@ public class UserCommandFactory extends BaseCommandFactory {
                     if(args.length < minLen - 1) {
                         return;
                     }
-                    String name = args[1];
+                    String name = args[0];
                     UserDAO user = ServerGlobals.WEBSERVICE.getUserByName(name);
                     if(user == null) {
                         sender.sendMessage(errorMsg("Kullanici bulunamadi!"));
@@ -54,7 +54,7 @@ public class UserCommandFactory extends BaseCommandFactory {
                     String msg = "ID:" + user.getId() + "\n" +
                             "Kullanici Adi: " + user.getUsername() + "\n" +
                             "Discord: " + user.getDiscord() + "\n" +
-                            "Token Gecerlilik Tarihi: " + DateTimeFormatter.BASIC_ISO_DATE.format(user.getTokenExpDate());
+                            "Token Gecerlilik Tarihi: " + DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(user.getTokenExpDate());
                     sender.sendMessage(infoMsg(msg));
                 })
                 .build();
@@ -62,7 +62,7 @@ public class UserCommandFactory extends BaseCommandFactory {
     }
 
     private void clearPass() {
-        int minLen = 3;
+        int minLen = 2;
         Command clearPass = Command.builder()
                 .desc("Oyuncunun sifresini siler. Oyuncunun tekrar kayıt olmasi gerekir.")
                 .commands(new String[]{"clearpass", "playerName"})
@@ -71,7 +71,7 @@ public class UserCommandFactory extends BaseCommandFactory {
                     if(args.length < minLen - 1) {
                         return;
                     }
-                    String name = args[1];
+                    String name = args[0];
                     try {
                         ServerGlobals.WEBSERVICE.clearUserPassword(sender.getName(), name);
                         sender.sendMessage(infoMsg(name + " isimli kullanicin sifresi silinmistir!"));
